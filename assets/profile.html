@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Project_Member_Name</title>				<!--Should be updated from database -->
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+	<style type="text/css">
+		div .panel-body { text-align:center;}
+		li.prop {text-align: left; padding-top: 10px;}
+		ul#prof {list-style-type: none;}
+		div.disp {text-align:right; display: inline; float:right;}
+		input[type="text"]{border:5px;height:24px;width:40%;border-radius:2px;text-align:center;}
+		input[type="button"]{width:120px;font-size:15px;}
+		div#search{  border: 1px solid #c9c3ba; padding-bottom: 20px;padding-top:1em; background-color: #f1f0ee; text-align:center; width:100%;}
+		ul.image {list-style-type:none; text-align:center; background-color:#FFFFFF; padding:10px;}
+		ul.image li {display:inline-block; }
+		img#left {margin-top:100px;}
+		img#right {margin-top:100px;}
+		p a {text-decoration: none; color: #000080;}
+		.change {float:center;}
+		a.navbar-brand {padding-top:33px; font-size:20px;}
+		.hide1 { display:none;}
+		 .taskname {display:inline-block;}
+		.modal-body{ background-color:#F0F0F0  ; color:#000000;}
+		input[type="text"]#inp4{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+		input[type="email"]#inp4{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+	</style>
+	<script type="text/javascript">
+		var tabLinks = new Array();
+    	var contentDivs = new Array();
+		var images = new Array();
+		images[0]="./images/project1.jpg";
+		images[1]="./images/project2.jpg";
+		images[2]="./images/project3.jpg";
+		var x=0;
+		var links = new Array();
+		links[0]="./project1.html";
+		links[1]="./project2.html";
+		links[2]="./project3.html";
+		var left;
+		var right;
+    	function init()	{
+			var tabListItems = document.getElementById('side-menu').childNodes;
+      		for ( var i = 0; i < tabListItems.length; i++ ) {
+        		if ( tabListItems[i].nodeName == "LI" ) {
+        			var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+          			var id = getHash(tabLink.getAttribute('href') );
+          			tabLinks[id] = tabLink;
+          			contentDivs[id] = document.getElementById( id );
+        		}
+      		}
+      		// Assign onclick events to the tab links, and
+      		// highlight the first tab
+      		var i = 0;
+			
+      		for ( var id in tabLinks ) {
+        		tabLinks[id].onclick = showTab;
+        		tabLinks[id].onfocus = function() { this.blur() };
+        	}
+
+      		// Hide all content divs except the first
+      		var i = 0;
+
+      		for ( var id in contentDivs ) {
+        		if ( i != 0 ) contentDivs[id].className = 'hide';
+        			i++;
+      		}
+			var checks=document.getElementsByTagName("INPUT");
+			for(i=0;i<checks.length;i++)	{
+				el=checks[i];
+				if(el.type=="checkbox") {
+					var elem=el.parentNode;
+					elem=elem.parentNode;
+					elem=elem.parentNode;
+					elem=getFirstChildWithTagName(elem,"A");
+					elem=getFirstChildWithTagName(elem,"DIV");
+					if(el.checked==true) {
+						elem.className="done";
+					}else {
+						elem.className="notdone";
+					}
+				}
+			}
+			left=document.getElementById('left1');
+			right=document.getElementById('right1');
+			left.onclick = prevImage;
+			right.onclick = nextImage;
+			
+			document.onkeydown = function(evt) {
+				evt = evt || window.event;
+				switch (evt.keyCode) {
+				case 37:
+					prevImage();
+					break;
+				case 39:
+					nextImage();
+					break;
+				}
+			}
+		}
+		function showTab() {
+      		var selectedId = getHash(this.getAttribute('href') );
+      		var selectedId2 = this.getAttribute('value');
+			// Highlight the selected tab, and dim all others.	
+      		// Also show the selected content div, and hide all others.
+      		for ( var id in contentDivs ) {
+        		if ( id == selectedId ) {
+          			contentDivs[id].className = 'content';
+        		} else {
+          			contentDivs[id].className = 'hide';
+        		}
+      		}
+
+      		// Stop the browser following the link
+      		return false;
+    	}
+    	function getFirstChildWithTagName( element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+    	function getHash( url ) {
+      		var hashPos = url.lastIndexOf ( '#' );
+      		return url.substring( hashPos + 1 );
+    	}
+    	function changeTitle(title) {
+    		document.title = title;
+    	}
+		function prevImage() {
+			if (x==0)
+				x=2;
+			else
+				x--;
+			document.getElementById("change").src=images[x];
+			document.getElementById("link").href=links[x];
+		}
+		function nextImage() {
+			if (x==2)
+				x=0;
+			else
+				x++;
+			document.getElementById("change").src=images[x];
+			document.getElementById("link").href=links[x];
+		}
+		function togglemodal() {
+	
+			var elem=document.getElementsByClassName("modal fade");
+			var elem1=document.getElementsByClassName("body1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="hide1";
+			el.className="modal-dialog";
+		}
+		function reset() {
+			var elem=document.getElementsByClassName("modal-dialog");
+			var elem1=document.getElementsByClassName("hide1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="body1";
+			el.className="modal fade";
+		}
+	</script>
+
+</head>
+
+<body onload="init()">
+<div class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
+					<h4 class="modal-title">Edit Profile</h4>
+				</div>
+				<form action="./profile.html">
+				<div class="modal-body">
+					<ul id="prof">
+								<li class="prop">Name	  		<div class="disp"> <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Sex	  		<div class="disp"> <input type="radio">Male <input type="radio" style="margin-left:15px;">Female</div></li>
+								<li class="prop">UserID	  		<div class="disp"> <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Email ID  		<div class="disp">  <input type="email" id="inp4"/> </div></li>
+								<li class="prop">Mobile    		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">List of Projects  	<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Interests  		<div class="disp">  <textarea rows="3" cols="25">Coding</textarea></div></li>
+								<br/>
+								<br/>
+								<br/>
+								<li class="prop">Current Place  		<div class="disp">  <input type="text" id="inp4"/></div></li>
+								<li class="prop">Institute  		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Graduating Year  		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Department  		<div class="disp">  <input type="text" id="inp4"/></div></li>
+								<li class="prop">Date Of Birth		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">High School  		<div class="disp">  <input type="text" id="inp4"/></div></li>
+								<li class="prop">Secondary School  	<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Resume(pdf format): 		<div class="disp"> <input type="file" name="img">  </div></li>
+							</ul>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-primary"  value="Ok">
+				</div>
+				</form>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<div class="body1">
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Welcome <b>Project_Member_Name</b></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- /.dropdown -->
+				<li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <li><a href="createproject.html"><i class="fa fa-briefcase fa-fw"></i> Create Project</a>
+                    </a>
+                    <!-- /.dropdown-user -->
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Overall Progress</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!--<li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a onclick="togglemodal();"><i class="fa fa-user fa-fw"></i> Edit Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="index.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+				
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <!-- /.navbar-static-top -->
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="#yourprofile"><i class="fa fa-desktop fa-fw"></i> View Profile </a>
+                    </li>
+                    <li>
+                        <a href="#yourprojects"><i class="fa fa-briefcase fa-fw"></i> List of Projects </a>
+                    </li>
+                    <li>
+                        <a href="#searchprojects"><i class="fa fa-search fa-fw"></i> Search Projects </a>
+                    </li>
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </nav>
+        <!-- /.navbar-static-side -->
+		<div id="yourprofile" class="content">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Your Profile</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tag fa-fw"></i> About
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul id="prof">
+								<li class="prop">Name	  		<div class="disp"> Luka Modric </div></li>
+								<li class="prop">Email ID  		<div class="disp"> luka.modric@gmail.com </div></li>
+								<li class="prop">Mobile    		<div class="disp"> 8676903204 </div></li>
+								<li class="prop">Place  		<div class="disp"> Croatia </div></li>
+								<li class="prop">Institute  		<div class="disp"> Indian Institute of Technology, Patna </div></li>
+								<li class="prop">Department  		<div class="disp"> Football </div></li>
+								<li class="prop">Date Of Birth		<div class="disp"> Sept 9 1985 </div></li>
+								<li class="prop">High School  		<div class="disp"> Hem Sheela Model School </div></li>
+								<li class="prop">Secondary School  	<div class="disp"> Hem Sheela Model School </div></li>
+							</ul>
+							<p><a href="">View CV</a></p>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-instagram fa-fw"></i> Member_Name
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                           <img src="./images/modric.jpg" width=200px height=300px norepeat style="padding-bottom:10px; float:center;"/>
+                            <a href="#" class="btn btn-default btn-block"><i class="fa fa-upload fa-fw"></i>Upload Profile Photo</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <!--<div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>
+                            Discussions
+                        </div>
+                        <div class="panel-body" id="discussions">
+                            <ul class="chat">
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Hello fellas....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 18 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Prasad Ayush Surender</strong>
+                                        </div>
+                                        <p>
+                                            Kuch kaam nahi hai kya??
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 17 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Shubham Kumar</strong> 
+                                        </div>
+                                        <p>
+                                            Arey tum log kya kar rahe ho... Tym waste mat karo
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 16 mins ago
+                                        </small>
+                                        
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+	                                         <strong class="primary-font">Ayush Kr</strong>
+                                        </div>
+                                        <p>
+                                            Arey o bara mujhe ek doubt hai mere room mein aa na....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 15 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Abey saale google kya apne gaar marane k liye banaya gaya hai kya
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 14 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>-->
+                        <!-- /.panel-body -->
+                        <!--<div class="addchat">
+                                <input size="20" class="inp1" type="text" onkeypress="chatupdate(this, event);" placeholder="Type your message here..." />
+                        </div>
+                        <!-- /.panel-footer
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+	</div>
+   
+	
+	<!-- Your Tasks -->
+	<div id="yourprojects" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Your Projects</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+				
+                   	<ul class="image">
+						<li>
+							<img src="./images/Left.png" id="left1" width="100px" height="75px"/>
+						</li>
+						<li>
+							<a href="./project1.html" id="link"><img src="./images/project2.jpg" id="change" width="800px" height="600px"/></a>
+						</li>
+						<li>
+							<img src="./images/Right.png" id="right1" width="100px" height="75px"/>
+						</li>				
+					</ul>
+        </div>
+    </div>		
+	<!-- /#Your Tasks -->
+	
+	<!-- About -->
+	<div id="searchprojects" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Search Projects</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8" id="search">
+                    
+					<!-- /.panel -->
+					<input name="name" size="20" type="text" id="inp" placeholder="Enter Project Title Here"/>
+					<br/>
+					<br/>
+					<input type="button" value="Search"/>
+                </div>
+                <!-- /.col-lg-8 -->
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- /#About -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+	<!--<script type="text/javascript">
+		function expand(el)	{
+			var list = document.getElementsByClassName("el");
+			var tabLink = getFirstChildWithTagName( el.parentNode, "DIV" );
+			for(var i=0;i<list.length;i++)	{
+				if(list[i]!=tabLink)	{
+					list[i].id="comment";
+					var elem=getFirstChildWithTagName(list[i].parentNode, "A" );
+					elem.className="list-group-item";
+				}
+			}
+			if(tabLink.id=="comment")	{
+				tabLink.id="comment-active";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item1";
+			}
+			else	{
+				tabLink.id="comment";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item";
+			}
+		}
+		function getFirstChildWithTagName(element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+		function retrieve(el) {
+			var tabLink = getFirstChildWithTagName( el.parentNode, "INPUT" );
+			var content = tabLink.value;
+			if(content!="")	{
+				el=el.parentNode.parentNode;
+				var list=getChildWithClassName(el, "taskcom");
+				var child=document.createElement("LI");
+				list.appendChild(child);
+				child.innerHTML = "<strong>Ranat</strong> : "+content;
+				tabLink.value = "";
+			}
+		}
+		function getChildWithClassName(element, classname) {
+			for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].className == classname ) return element.childNodes[i];
+      		}
+		}
+		function enter(e, event) {
+			/*var evt = window.event;*/
+			if(event.which == 13) {
+				retrieve(e);
+			}
+		}
+		function recievechat(el) {
+			var message=el.value;
+			el.value="";
+			if(message!="") {
+				var child=document.createElement("LI");
+				var child1=document.createElement("DIV");
+				var child2=document.createElement("DIV");
+				var child3=document.createElement("STRONG");
+				var child4=document.createElement("P");
+				var child5=document.createElement("SMALL");
+				var child6=document.createElement("I");
+				var child7=document.createTextNode("You");
+				var child8=document.createTextNode(message);
+				var child9=document.createTextNode("10 mins ago");
+				child5.className="text-muted";
+				child6.className="fa fa-clock-o fa-fw";
+				child5.appendChild(child6);
+				child5.appendChild(child9);
+				child4.appendChild(child8);
+				child3.className="primary-font";
+				child3.appendChild(child7);
+				child2.className="header";
+				child2.appendChild(child3);
+				child1.appendChild(child2);
+				child1.appendChild(child4);
+				child1.appendChild(child5);
+				child.appendChild(child1);
+				child.className="right clearfix";
+				el=el.parentNode;
+				el=el.parentNode;
+				el=getChildWithClassName(el,"panel-body");
+				var temp=el;
+				el=getChildWithClassName(el,"chat");
+				el.appendChild(child);
+				scrollbar(temp);
+			}
+		}
+		function chatupdate(e, event) {
+			if(event.which == 13) {
+				recievechat(e);
+			}
+		}
+		function check(el) {
+			var elem=el.parentNode;
+			elem=elem.parentNode;
+			elem=elem.parentNode;
+			elem=getFirstChildWithTagName(elem,"A");
+			elem=getFirstChildWithTagName(elem,"DIV");
+			if(el.checked==true) {
+				elem.className="done";
+			}else {
+				elem.className="notdone";
+			}
+		}
+		function scrollbar(el) {
+			el.scrollTop = el.scrollHeight;
+		}
+	</script>-->
+</body>
+
+</html>

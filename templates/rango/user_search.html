@@ -1,0 +1,17 @@
+{% if users.count > 0 %}
+{% for user in users %}
+    <li style="display: block;" id="user-search">
+    <form id="add_user" method="get" action="/rango/project/{{project_id}}/">
+        <a href="/rango/profile/{{user.id}}/">{{user.username}}</a>
+        <input type="text" name="curr_user" hidden="hidden" value="{{user.pk}}" />
+        <input type="submit" name="add_user" value="Add member" style="float: right; margin-right: 20px; margin-left: 20px;"/>
+    </form>
+    </li>
+{% endfor %}
+
+{% else %}
+    <li>
+        Nothing to Show!
+    </li>
+
+{% endif %}

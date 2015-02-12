@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Welcome to Asara</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="css/stylish-portfolio.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<style type="text/css">
+		#vid{text-align:center;}
+		#contents {min-height: 200px; min-width: 400px; margin: 0 auto; border-radius:5px; padding:30px; font-size:15px;}
+		p.prop {text-align:left;color: #FFFFFF;font-size: 16px;font-weight: normal;line-height: 24px;margin: 0 0 30px;text-align: left;}
+		input#inp[type="text"]{padding:3px; color:#000000; float:right;border:1;height:24px;border-radius:2px;font-size:12px;}
+		input#inp1[type="text"]{padding:3px; float:right;border:0;height:24px;border-radius:0;font-size:16px; color:#FFFFFF; background-color:#0a5175;}
+		input#inp[type="password"]{padding:3px; color:#000000; float:right;border:1;height:24px;border-radius:2px;font-size:12px;width:230px }
+		input#inp[type="email"]{padding:3px; color:#000000; float:right;border:1;height:24px;border-radius:2px;font-size:12px; border-width:1px; width:110px}
+		input#inp2[type="text"]{padding:3px; color:#000000; float:right;border:1;height:24px;border-radius:2px;font-size:12px; border-width:1px; width:230px}
+		#contents a{margin-left:80px;}
+		input[type="text"] {height:20px; width:110px; margin:0; margin-left:10px; border-radius:2px;border-width:1px;font-size:12px;}
+		input[type="password"] {height:20px; width:110px; margin:0; margin-left:10px; border-radius:2px;border-width:1px;font-size:12px;}
+		input[type="button"] {width:70px; margin-left:10px; margin:0; border-radius:2px; border-width:1px; color:#000000; background-color:#D1D0CE;font-size:16px; height:30px;}
+		ul.login {list-style-type: none; padding-top:12px;padding-right:30px; color:#FFFFFF;}
+		input#inp3[type="text"] {height:20px; width:110px; padding:3px; margin:5px; margin-left:5px; border-radius:2px; border-width:1px; font-size:12px; color:#000000;}
+		input#inp3[type="checkbox"] { margin:5px; padding:3px; font-size:10px;}
+		input#inp3[type="password"] { height:20px; width:110px; padding:3px; margin:5px; margin-left:5px; border-radius:2px;border-width:1px;font-size:12px; color:#000000;}
+		.login a {text-decoration: none; color: #FFFFFF;}
+	    .hide1 {display:none;}
+		.modal-dialog {height:100%;}
+		#hide2 {display:none;}
+		#hide3 {display:none;}
+		#hide4 {display:none;}
+		input[type="text"]#inp4{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+		input#inp4[type="password"]{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+		ul#prof {list-style-type: none;}
+		div.disp {text-align:right; display: inline; float:right;}
+		.modal-body{ background-color:#F0F0F0  ; color:#000000;}
+		li.prop {text-align: left; padding-top: 10px;}
+		.forgot {text-align:center; padding-top:10px}
+	</style>
+</head>
+
+<body>
+
+<div class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
+					<h4 class="modal-title">Login</h4>
+				</div>
+				<form id="login_form" method="post" action="/rango/login/">
+				{% csrf_token %}
+				<div class="modal-body">
+					<ul id="prof">
+								<li class="prop"><strong>Username</strong>	  	<div class="disp"> <input type="text" name="username" id="inp4"/> </div></li>
+								<br/>
+								<li class="prop"><strong>Password</strong>	  	<div class="disp"> <input type="password" name="password" id="inp4"/> </div></li>
+								<br/>
+								<li class="forgot"><a href="forgot.html"><strong>Forgot Password?</strong></a></li>
+								
+					</ul>			
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-primary" name="submit" value="Sign In">
+				</div>
+				</form>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+    <!-- Side Menu -->
+    <a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><b class="fa fa-bars"></b></a>
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <a id="menu-close" href="#" class="btn btn-default btn-lg pull-right toggle"><b class="fa fa-times"></b></a>
+            <li><a href="#top">Home</a>
+            </li>
+            <li><a href="#about">About</a>
+            </li>
+            <li><a href="#services">Services</a>
+            </li>
+			<li><a href="#signup">Sign Up</a>
+            </li>
+            <li><a href="#contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+	<a id="menu-toggle1" onclick="togglemodal();"class="btn btn-primary btn-lg toggle"><b class="fa fa-bars"> Login </b></a>
+
+    <!-- /Side Menu -->
+
+    <!-- Full Page Image Header Area -->
+    <div id="top" class="header">
+        <div class="vert-text">
+            <h1>Welcome to Asara</h1>
+            <h3>
+                <em>Teamwork</em> made easy without email</h3>
+            <a href="#signup" class="btn btn-default btn-lg">Get Started</a>
+        </div>
+    </div>
+    <!-- /Full Page Image Header Area -->
+
+	
+<div class="body1">
+    <!-- Intro -->
+    <div id="about" class="intro">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <h2>Interact, share and converse hassle free with your team mates</h2>
+                    <p class="lead">Organizing projects has never been so easy and entertaining</p>
+                </div>
+            </div>
+        </div>
+		<div id="vid">
+			<video width="800px" height="480px" controls>
+			<source src="movie.mp4" type="video/mp4">
+			</video>
+		</div>
+    </div>
+    <!-- /Intro -->
+
+    <!-- Services -->
+    <div id="services" class="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <h2>Our Services</h2>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-md-offset-2 text-center">
+                    <div class="service-item">
+                        <i class="service-icon fa fa-users"></i>
+                        <h4>Team Work</h4>
+                        <p>Are you frustrated with sending mails? Asara provides you the platform to interact with team mates easily without monotonous emails</p>
+                    </div>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div class="service-item">
+                        <i class="service-icon fa fa-calendar"></i>
+                        <h4>Manage Projects</h4>
+                        <p>Adding new team members, removing older members, creating projects, assigning tasks, participating and searching projects at the tip of your fingers</p>
+                    </div>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div class="service-item">
+                        <i class="service-icon fa fa-folder-open"></i>
+                        <h4>File Sharing</h4>
+                        <p>Tired of using pen drives and emails? Share files with your team members through Asara with just one click</p>
+                    </div>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div class="service-item">
+                        <i class="service-icon fa fa-comments"></i>
+                        <h4>Discussions</h4>
+                        <p>Save phone bills! In Asara all discussions can be carried out wherever your team members are</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Services -->
+
+    <!-- Video ->
+    <div id="video" class="callout">
+        <div class="vert-text">
+			<video width="1280px" height="720px" controls>
+			<source src="movie.mp4" type="video/mp4">
+			</video>
+		</div>
+    </div>
+    <!-- /Video -->
+
+    <!-- Contact -->
+    <div id="signup" class="call-to-action">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <h3>Sign Up Now</h3>
+                    <!--<a href="#" class="btn btn-lg btn-default">Click Me!</a>-->
+					<div id="contents">
+						<p class="prop">Name	  <input name="name" size="20" type="text" title="Fill your Name" placeholder="Full Name" id="inp2"/><!--input name="name" size="20" type="text" title="Fill your First Name" placeholder="First Name" id="inp"/--></p>
+						<p class="prop">Email ID  <input name="name" size="20" type="text" id="inp1" value="@iitp.ac.in" readonly/><input name="email" size="20" type="email" required title="What is your Institute Email ID" placeholder="username" id="inp"/></p>
+						<p class="prop">Mobile    <input name="mob" size="20" type="text" title="What is your Mobile No." id="inp2" placeholder="Enter a 10 digit Mobile number"/></p>
+						<p class="prop">Password  <input name="pwd" size="20" type="password" title="Type your Password" id="inp" placeholder="Atleast 6 characters long"/></p>
+						<p class="prop">Confirm password  <input name="pwd" size="20" type="password" title="Confirm Password" id="inp" placeholder="Atleast 6 characters long"/></p>
+					</div>
+                    <a href="#signup" class="btn btn-lg btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	<!-- /Contact -->
+
+	<!-- Portfolio -->
+    <div id="contact" class="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <h2>Contact Us</h2>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-2 text-center">
+                    <div class="portfolio-item">
+                        
+                            <img height="400px" width="700px" class="img-portfolio img-responsive" src="./images/ranat.jpg" id="imageid1">
+                        
+                        <h3>Ranat Ghosh</h3>
+						<a  href="https://www.facebook.com/rghosh123?fref=ts&ref=br_tf" target="blank"><img src="./images/fb.jpg" ></a>
+                    </div>
+                </div>
+				
+                <div class="col-md-4 text-center">
+                    <div class="portfolio-item">
+                      
+                            <img height="400px" width="700px" class="img-portfolio img-responsive" src="./images/shubham.jpg" id="imageid2">
+                        
+                        <h3>Shubham Kumar</h3>
+						<a  href="https://www.facebook.com/shubh0707?ref=tn_tnmn" target="blank"><img src="./images/fb.jpg" ></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-2 text-center">
+                    <div class="portfolio-item">
+                        <img height="400px" width="700px" class="img-portfolio img-responsive" src="./images/anwesh.jpg" id="imageid3" >
+						
+                        <h3>Anwesh Sinha Ray</h3>
+						<a  href="https://www.facebook.com/anwesh.sinharay?fref=ts" target="blank"><img src="./images/fb.jpg" ></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="portfolio-item">
+                        
+                            <img height="400px" width="700px" class="img-portfolio img-responsive" src="./images/ayush.jpg" id="imageid4">
+                        
+                        <h3>Prasad Ayush Surendra</h3>
+						<a  href="https://www.facebook.com/ayusheyes?fref=ts" target="blank"><img src="./images/fb.jpg" ></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Portfolio -->
+	
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    
+                    <div class="top-scroll">
+                        <a href="#top"><i class="fa fa-arrow-circle-up scroll fa-4x"></i></a>
+                    </div>
+                    <hr>
+                    <p>Copyright &copy; Asara 2014</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- /Footer -->
+</div>
+    <!-- JavaScript -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <!-- Custom JavaScript for the Side Menu and Smooth Scrolling -->
+    <script>
+    $("#menu-close").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+    </script>
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+    </script>
+	<script>
+    $("#menu-close1").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper1").toggleClass("active");
+    });
+    </script>
+    <script>
+    $("#menu-toggle1").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper1").toggleClass("active");
+    });
+    </script>
+    <script>
+    $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+	function togglemodal() {
+	
+			var elem=document.getElementsByClassName("modal fade");
+			var elem1=document.getElementsByClassName("body1");
+			document.getElementById("menu-toggle").id="hide2";
+			document.getElementById("menu-toggle1").id="hide3";
+			document.getElementById("top").id="hide4";
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="hide1";
+			el.className="modal-dialog";
+		}
+		function reset() {
+			var elem=document.getElementsByClassName("modal-dialog");
+			var elem1=document.getElementsByClassName("hide1");
+			document.getElementById("hide2").id="menu-toggle";
+			document.getElementById("hide3").id="menu-toggle1";
+			document.getElementById("hide4").id="top";
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="body1";
+			el.className="modal fade";
+		}
+		
+        /*
+		$('#imageid1').hover(function() {
+		$(this).attr('src', './images/ranatfade.jpg');
+		}, function() {
+		$(this).attr('src', './images/ranat.jpg');
+		});
+		$('#imageid2').hover(function() {
+		$(this).attr('src', './images/shubhamfade.jpg');
+		}, function() {
+		$(this).attr('src', './images/shubham.jpg');
+		});
+		$('#imageid3').hover(function() {
+		$(this).attr('src', './images/anweshfade.jpg');
+		}, function() {
+		$(this).attr('src', './images/anwesh.jpg');
+		});
+		$('#imageid4').hover(function() {
+		$(this).attr('src', './images/ayushfade.jpg');
+		}, function() {
+		$(this).attr('src', './images/ayush.jpg');
+		});*/
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+{% if projects.count > 0 %}
+{% for project in projects %}
+    <a href="/rango/project/{{project.id}}/"><li><h4>{{project.project_name}}</h4>
+{{project.project_description}}
+</li></a>
+{% endfor %}
+
+{% else %}
+    <li>
+        Nothing to Show!
+    </li>
+
+{% endif %}

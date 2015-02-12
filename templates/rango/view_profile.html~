@@ -1,0 +1,1368 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static "assets/images/logo.jpg" %}"><title>{{profile_user.username}}</title>				<!--Should be updated from database -->
+    <script src="{% static "assets/js/jquery-2.0.0.min.js" %}"></script>
+    <script src="{% static "assets/js/ajax.js" %}"></script>
+    <script src="{% static "assets/js/ajax1.js" %}"></script>
+    <!-- Core CSS - Include with every page -->
+    <link href="{% static "assets/css/bootstrap.min.css" %}"rel="stylesheet">
+    <link href="{% static "assets/font-awesome/css/font-awesome.css" %}"rel="stylesheet">
+	
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="{% static "assets/css/plugins/morris/morris-0.4.3.min.css" %}" rel="stylesheet">
+    <link href="{% static "assets/css/plugins/timeline/timeline.css" %}" rel="stylesheet">
+	
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="{% static "assets/css/sb-admin.css" %}" rel="stylesheet">
+	<style type="text/css">
+		div .panel-body { text-align:center;}
+		li.prop {text-align: left; padding-top: 10px;}
+		ul#prof {list-style-type: none;}
+		div.disp {text-align:right; display: inline; float:right;}
+		input[type="text"]{border:5px;height:24px;width:40%;border-radius:2px;text-align:center;}
+		input[type="button"]{width:120px;font-size:15px;}
+		div#search{  border: 1px solid #c9c3ba; padding-bottom: 20px;padding-top:1em; background-color: #f1f0ee; text-align:center; width:100%;}
+		ul.image {list-style-type:none; text-align:center; background-color:#FFFFFF; padding:10px;}
+		ul.image li {display:inline-block; }
+		img#left {margin-top:100px;}
+		img#right {margin-top:100px;}
+		input[type="checkbox"] {float:right;}
+		ul {list-style-type:none;}
+		.nav li	{margin-bottom:0px;}
+		.done {
+			float:right;
+			width:20px;
+			height:20px;
+		}
+		.notdone {
+			display:none;
+		}
+		li {display:block;}
+		a.list-group-item1 {
+			text-decoration:none;
+			background-color:#f5f5f5;
+			border-top-right-radius:4px;
+			border-top-left-radius:4px;
+			position:relative;
+			display:block;
+			padding:10px 15px;
+			margin;-1px;
+			border:1px solid #ddd;
+		}
+		#comment {
+			display:none;
+			height:auto;
+			background: #FFFFFF;
+			border-width:2px;
+			overflow-y: auto;
+			border-bottom-left-radius:3px;
+			border-bottom-right-radius:3px;
+			border:1px solid #ddd;
+			z-index: 1000;
+			padding:10px;
+			-webkit-transition: all 0.4s ease 0s;
+			-moz-transition: all 0.4s ease 0s;
+			-ms-transition: all 0.4s ease 0s;
+			-o-transition: all 0.4s ease 0s;
+			transition: all 0.4s ease 0s;
+		}
+		#comment-active {
+			height:auto;
+			background: #FFFFFF;
+			border-width:2px;
+			overflow-y: auto;
+			border-bottom-left-radius:3px;
+			border-bottom-right-radius:3px;
+			border:1px solid #ddd;
+			z-index: 1000;
+			padding:10px;
+			-webkit-transition: all 0.4s ease 0s;
+			-moz-transition: all 0.4s ease 0s;
+			-ms-transition: all 0.4s ease 0s;
+			-o-transition: all 0.4s ease 0s;
+			transition: all 0.4s ease 0s;
+		}
+		li {
+			margin-bottom:2px;
+		}
+		ul .taskcom {
+			display:block;
+			list-style-type:none;
+			padding-left:0;
+			padding-right:0;
+			margin:5px;
+		}
+		ul .taskcom li {
+			width:100%;
+			background:#F2F2F2;
+			color:#000000;
+			padding:5px;
+			border-radius:2px;
+			margin-left:5px;
+			margin-right:8px;
+		}
+		.inp,.addcom textarea {
+			width:100%;
+			height:30px;
+			border-radius:2px;
+			border-width:1px;
+			padding:5px;
+			margin-left:5px;
+			margin-right:8px;
+			border:solid #F2F2F2 2px;
+		}
+		.inp1 {
+			width:100%;
+			height:30px;
+			border-radius:2px;
+			border-width:1px;
+			padding:5px;
+			border:solid #F2F2F2 2px;
+		}
+		.addcom {
+			border-radius:2px;
+			border-width:1px;
+			padding-left:0;
+			padding-right:0;
+			margin:5px;
+		}
+		.sub {
+			height:30px;
+			margin-left:5px;
+			margin-right:8px;
+			width:100px;
+		}
+		.hide, .hide1 {
+			display:none;
+		}
+		.addchat {
+			padding:10px 15px;
+			background-color:#f5f5f5;
+			border-top:1px solid #ddd;
+			border-bottom-right-radius:3px;
+			border-bottom-left-radius:3px;
+			border-radius:2px;
+			width:100%;
+		}
+		.subj {
+			width:200px;
+			height:100%;
+			float:left;
+			margin-top:5px;
+			text-align:left;
+		}
+		.desp {
+			height:25px;
+			width:300px;
+			float:right;
+			text-align:left;
+		}
+		.desp1 {
+			height:150px;
+			width:300px;
+			float:right;
+			text-align:justify;
+		}
+		.about-part {
+			display:block;
+			width:100%;
+			margin-bottom:10px;
+			height:auto;
+		}
+		.addtask {
+			width:120px;
+			height:40px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-bottom:10px;
+			margin-left:55px;
+			text-align:center;
+		}
+		.addtask:hover {
+			background-color:#BDBDBD;
+		}
+		li .files {
+			display:inline-block;
+			width:100%;
+			height:30px;
+			padding:5px;
+			text-align:center;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			color:#000000;
+			margin-bottom:2px;
+			float:right;
+		}
+		li .files:hover {
+			background-color:#ddd;
+		}
+		a .file {
+			text-decoration:none;
+			margin:0;
+			color:#000000;
+			width:190px;
+			
+		}
+		li .people {
+			display:block;
+			width:200px;
+			height:30px;
+			padding:5px;
+			text-align:center;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			color:#000000;
+			margin:2px;
+		}
+		li .people:hover {
+			background-color:#ddd;
+		}
+		.addpeop {
+			height:30px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-top:10px;
+			margin-left:30px;
+			padding:5px;
+			text-align:center;
+			border-width:0px;
+		}
+		.addpeop:hover {
+			background-color:#BDBDBD;
+		}
+		.addpeop1 {
+			height:40px;
+			border:1px solid #ddd;
+			margin-top:10px;
+			margin-left:42px;
+			padding:10px;
+			text-align:center;
+		}
+		.adddead {
+			height:30px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-bottom:10px;
+			padding:5px;
+			margin-left:30px;
+			text-align:center;
+			border-width:0px;
+		}
+		.adddead:hover {
+			background-color:#BDBDBD;
+		}
+		.adddead1 {
+			height:40px;
+			border:1px solid #ddd;
+			margin-bottom:10px;
+			padding:10px;
+			margin-left:42px;
+			text-align:center;
+		}
+		.overlay {
+			visibility:hidden;
+			position:absolute;
+			width:100%;
+			height:100%;
+			left:0px;
+			top:0px;
+			text-align:center;
+		}
+		.overlay div {
+			width:500px;
+			height:500px;
+			margin:100px auto;
+			border:1px solid #000;
+			border-radius:5px;
+			padding:15px;
+			text-align:center;
+		}
+		.taskname {
+			width:100%;
+			height:30px;
+			text-align:center;
+			float:center;
+			margin:5px;
+		}
+		.taskdate {
+			margin:5px;
+			height:30px;
+		}
+		.modal1 {
+			visibility:hidden;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			position:absolute;
+			z-index:99999;
+			-webkit-transition: opacity 400ms ease-in;
+			-moz-transition: opacity 400ms ease-in;
+			transition: opacity 400ms ease-in;
+		}
+		#add_task {
+			padding-left:20px;
+			padding-right:20px;
+			padding-top:10px;
+		}
+		#id_task_name {
+			float:right;
+			width:220px;
+			height:30px;
+		}
+		#id_task_description {
+			float:right;
+			width:220px;
+			height:30px;
+		}
+		#id_task_deadline {
+			float:right;
+			width:220px;
+			height:30px;
+		}
+		#id_task_member {
+			float:right;
+			width:100px;
+		}
+		#add_task input[type="submit"] {
+			float:center;
+			width:80px;
+			height:30px;
+			margin-bottom:10px;
+		}
+		.errorlist {
+			display:none;
+		}
+		.bin1 {
+			background:url("{% static "img/bin.png" %}");
+			background-size: cover;
+			border: 0;
+		    display: block;
+    		height: 30px;
+    		width: 30px;
+		}
+		#id_project_name {
+			float:right;
+			width:280px;
+			height:30px;
+		}
+		#id_project_description {
+			float:right;
+			width:280px;
+			height:30px;
+		}
+		#id_project_department {
+			float:right;
+			width:280px;
+			height:30px;
+		}
+		#id_project_members {
+			float:right;
+			width:280px;
+			height:30px;
+		}
+		.complt {
+			float:right;
+			width:100px;
+			border:1px solid #ddd;
+			height:30px;
+		}
+		.bin {
+			float: right;
+		}
+		#search1	{
+			width:700px;
+			height:30px;
+			border:1px solid #DDD;
+			margin-left:10px;
+			text-align:left;
+			padding:5px;
+		}
+		#search-results	{
+			display:block;
+			width:700px;
+			padding:10px;
+			margin-top:30px;
+		}
+		#search-results a li	{
+			width:700px;
+			border-bottom: 1px solid #DDD;
+			min-height: 20px;
+			margin-bottom: 0px;
+			margin-top: 0px;
+			border-radius:2px;
+			padding:3px;
+			padding-left:10px;
+		}
+		#search-results li:hover	{
+			background-color: #ECE3E3;
+		}
+		#search-results a	{
+			width:700px;
+			text-decoration:none;
+			color: #000;
+		}
+		#search-results a	h4 {
+			text-decoration:none;
+			color: #428bca;
+		}
+		p a {text-decoration: none; color: #000080;}
+		.change {float:center;}
+		a.navbar-brand {padding-top:33px; font-size:20px;}
+		.hide, .hide1 { display:none;}
+		.taskname {display:inline-block;}
+		.modal-body{ background-color:#F0F0F0  ; color:#000000;}
+		input[type="text"]#inp4{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+		input[type="email"]#inp4{border:5px;height:24px;width:100%;border-radius:2px;text-align:center;}
+                .modal1 {visibility:hidden; 	top: 0;	right: 0;bottom: 0;	left: 0;position:fixed;z-index:99999;-webkit-transition: opacity 400ms ease-in;-moz-transition: opacity 400ms ease-in;transition: opacity 400ms ease-in;}
+	    </style>
+	<script type="text/javascript">
+	    var tabLinks = new Array();
+	    var contentDivs = new Array();
+		var images = new Array();
+		images[0]="./images/project1.jpg";
+		images[1]="./images/project2.jpg";
+		images[2]="./images/project3.jpg";
+		var x=0;
+		var links = new Array();
+		links[0]="./project1.html";
+		links[1]="./project2.html";
+		links[2]="./project3.html";
+		var left;
+		var right;
+    	function init()	{
+			var tabListItems = document.getElementById('side-menu').childNodes;
+      		for ( var i = 0; i < tabListItems.length; i++ ) {
+        		if ( tabListItems[i].nodeName == "LI" ) {
+        			var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+          			var id = getHash(tabLink.getAttribute('href') );
+          			tabLinks[id] = tabLink;
+          			contentDivs[id] = document.getElementById( id );
+        		}
+      		}
+      		// Assign onclick events to the tab links, and
+      		// highlight the first tab
+      		var i = 0;
+			
+      		for ( var id in tabLinks ) {
+        		tabLinks[id].onclick = showTab;
+        		tabLinks[id].onfocus = function() { this.blur() };
+        	}
+
+      		// Hide all content divs except the first
+      		var i = 0;
+
+      		for ( var id in contentDivs ) {
+        		if ( i != 0 ) contentDivs[id].className = 'hide';
+        			i++;
+      		}
+			var checks=document.getElementsByTagName("INPUT");
+			for(i=0;i<checks.length;i++)	{
+				el=checks[i];
+				if(el.type=="checkbox") {
+					var elem=el.parentNode;
+					elem=elem.parentNode;
+					elem=elem.parentNode;
+					elem=getFirstChildWithTagName(elem,"A");
+					elem=getFirstChildWithTagName(elem,"DIV");
+					if(el.checked==true) {
+						elem.className="done";
+					}else {
+						elem.className="notdone";
+					}
+				}
+			}
+			left=document.getElementById('left1');
+			right=document.getElementById('right1');
+			left.onclick = prevImage;
+			right.onclick = nextImage;
+			
+			document.onkeydown = function(evt) {
+				evt = evt || window.event;
+				switch (evt.keyCode) {
+				case 37:
+					prevImage();
+					break;
+				case 39:
+					nextImage();
+					break;
+				}
+			}
+		}
+		function showTab() {
+      		var selectedId = getHash(this.getAttribute('href') );
+      		var selectedId2 = this.getAttribute('value');
+			// Highlight the selected tab, and dim all others.	
+      		// Also show the selected content div, and hide all others.
+      		for ( var id in contentDivs ) {
+        		if ( id == selectedId ) {
+          			contentDivs[id].className = 'content';
+        		} else {
+          			contentDivs[id].className = 'hide';
+        		}
+      		}
+
+      		// Stop the browser following the link
+      		return false;
+    	}
+    	function getFirstChildWithTagName( element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+    	function getHash( url ) {
+      		var hashPos = url.lastIndexOf ( '#' );
+      		return url.substring( hashPos + 1 );
+    	}
+    	function changeTitle(title) {
+    		document.title = title;
+    	}
+		function prevImage() {
+			if (x==0)
+				x=2;
+			else
+				x--;
+			document.getElementById("change").src=images[x];
+			document.getElementById("link").href=links[x];
+		}
+		function nextImage() {
+			if (x==2)
+				x=0;
+			else
+				x++;
+			document.getElementById("change").src=images[x];
+			document.getElementById("link").href=links[x];
+		}
+		function togglemodal() {
+	
+			var elem=document.getElementsByClassName("modal fade");
+			var elem1=document.getElementsByClassName("body1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="hide1";
+			el.className="modal-dialog";
+		}
+		function reset() {
+			var elem=document.getElementsByClassName("modal-dialog");
+			var elem1=document.getElementsByClassName("hide1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="body1";
+			el.className="modal fade";
+		}
+		function expand(el)	{
+			var list = document.getElementsByClassName("el");
+			var tabLink = getFirstChildWithTagName( el.parentNode, "DIV" );
+			for(var i=0;i<list.length;i++)	{
+				if(list[i]!=tabLink)	{
+					list[i].id="comment";
+					var elem=getFirstChildWithTagName(list[i].parentNode, "A" );
+					elem.className="list-group-item";
+				}
+			}
+			if(tabLink.id=="comment")	{
+				tabLink.id="comment-active";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item1";
+			}
+			else	{
+				tabLink.id="comment";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item";
+			}
+		}
+		function getFirstChildWithTagName(element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+		function retrieve(el) {
+			var tabLink = getFirstChildWithTagName( el.parentNode, "INPUT" );
+			var content = tabLink.value;
+			if(content!="")	{
+				el=el.parentNode.parentNode;
+				var list=getChildWithClassName(el, "taskcom");
+				var child=document.createElement("LI");
+				list.appendChild(child);
+				child.innerHTML = "<strong>Ranat</strong> : "+content;
+				tabLink.value = "";
+			}
+		}
+		function getChildWithClassName(element, classname) {
+			for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].className == classname ) return element.childNodes[i];
+      		}
+		}
+		function enter(e, event) {
+			/*var evt = window.event;*/
+			if(event.which == 13) {
+				retrieve(e);
+			}
+		}
+		function recievechat(el) {
+			var message=el.value;
+			el.value="";
+			if(message!="") {
+				var child=document.createElement("LI");
+				var child1=document.createElement("DIV");
+				var child2=document.createElement("DIV");
+				var child3=document.createElement("STRONG");
+				var child4=document.createElement("P");
+				var child5=document.createElement("SMALL");
+				var child6=document.createElement("I");
+				var child7=document.createTextNode("You");
+				var child8=document.createTextNode(message);
+				var child9=document.createTextNode("10 mins ago");
+				child5.className="text-muted";
+				child6.className="fa fa-clock-o fa-fw";
+				child5.appendChild(child6);
+				child5.appendChild(child9);
+				child4.appendChild(child8);
+				child3.className="primary-font";
+				child3.appendChild(child7);
+				child2.className="header";
+				child2.appendChild(child3);
+				child1.appendChild(child2);
+				child1.appendChild(child4);
+				child1.appendChild(child5);
+				child.appendChild(child1);
+				child.className="right clearfix";
+				el=el.parentNode;
+				el=el.parentNode;
+				el=getChildWithClassName(el,"panel-body");
+				var temp=el;
+				el=getChildWithClassName(el,"chat");
+				el.appendChild(child);
+				scrollbar(temp);
+			}
+		}
+		function chatupdate(e, event) {
+			if(event.which == 13) {
+				recievechat(e)
+			}
+		}
+		function check(el) {
+			var elem=el.parentNode;
+			elem=elem.parentNode;
+			elem=elem.parentNode;
+			elem=getFirstChildWithTagName(elem,"A");
+			elem=getFirstChildWithTagName(elem,"DIV");
+			if(el.checked==true) {
+				elem.className="done";
+			}else {
+				elem.className="notdone";
+			}
+		}
+		function scrollbar(el) {
+			el.scrollTop = el.scrollHeight;
+		}
+		function commententer(e) {
+			alert("hello");
+			e=getFirstChildWithTagName(e,"P");
+			e=getFirstChildWithTagName(e,"TEXTAREA");
+			var atr=document.createAttribute("onkeypress");
+			atr.value="detectenter(this, event);";
+			e.setAttributeNode(atr);
+		}
+		function detectenter(x, event) {
+			if(event.which=13)	{
+				x=x.parentNode;
+				x=x.parentNode;
+				x=x.parentNode;
+				x.submit();
+			}
+		}
+                function togglemodal1(event) {
+			event.preventDefault();
+			var elem=document.getElementsByClassName("modal1");
+			var el=elem[0];
+			el.style.visibility="visible";
+		}
+		function reset1() {
+			var elem=document.getElementsByClassName("modal1");
+			var el=elem[0];
+			el.style.visibility="hidden";
+		}
+	
+	</script>
+
+</head>
+<body onload="init()">
+<div class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
+					<h4 class="modal-title">Edit Profile</h4>
+				</div>
+                                <!--<form id="UserUpdateForm" method="post" action="/rango/profile/edit/">
+				{% csrf_token %} -->
+                                <form id="user_form" method="post" action="" enctype="multipart/form-data">
+                                    {% csrf_token %}
+				<div class="modal-body">
+                                                        {{ user_form.as_p }}
+                                                        {{ profile_form.as_p }}
+<!--					<ul id="prof">
+
+        
+                                            
+                                                                <li class="prop">First Name	  		<div class="disp"> <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Last Name	  		<div class="disp"> <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Sex	  		<div class="disp"> <input type="radio">Male <input type="radio" style="margin-left:15px;">Female</div></li>
+								<li class="prop">UserID	  		<div class="disp"> <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Email ID  		<div class="disp">  <input type="email" id="inp4"/> </div></li>
+								<li class="prop">Mobile    		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Current Place  		<div class="disp">  <input type="text" id="inp4"/></div></li>
+								<li class="prop">Institute  		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Department  		<div class="disp">  <input type="text" id="inp4"/></div></li>
+								<li class="prop">Date Of Birth		<div class="disp">  <input type="text" id="inp4"/> </div></li>
+								<li class="prop">Resume(pdf format): 		<div class="disp"> <input type="file" name="img">  </div></li>
+							</ul>-->
+                                        
+				</div>
+                                <div class="modal-footer">
+					<input type="submit" name="edit_profile" class="btn btn-primary" value="Save Changes" />
+				</div>
+				</form>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+<div class="modal1">
+<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset1();">&times;</button>
+					<h4 class="modal-title">Create Project</h4>
+				</div>
+                                <!--<form id="UserUpdateForm" method="post" action="/rango/profile/edit/">
+				{% csrf_token %} -->
+                                
+				<div class="modal-body">
+                                    <!-- Enter the create project form here -->
+                                
+                                           <form id="category_form" method="post" action="/rango/profile/{{profile_user.pk}}/">
+
+                                                {% csrf_token %}
+                                                {{project_form.as_p}}
+                                         <div class="modal-footer">
+                                            <input type="submit" name="create_project"class="btn btn-primary" value="Create" />
+                   			</div>
+                                            </form>
+                                </div>
+                                
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<div class="body1">
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Welcome, <b>{{profile_user.first_name}}</b></a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- /.dropdown -->
+				<li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        {% if id == user.pk %}
+                        <li><a onclick="togglemodal1(event);" href="" ><i class="fa fa-briefcase fa-fw"></i> Create Project</a>
+                        {% endif %}
+                    </a>
+                    <!-- /.dropdown-user -->
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Overall Progress</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!--<li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        {% if id == user.pk %}
+                        <li><a onclick="togglemodal();"><i class="fa fa-user fa-fw"></i> Edit Profile</a>
+                        </li>
+                        {% endif %}
+                        <li class="divider"></li>
+                        <li><a href="/rango/logout/"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+				
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <!-- /.navbar-static-top -->
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    {% if user.pk == id%}
+                    <li>
+                        <a href="#yourprofile"><i class="fa fa-desktop fa-fw"></i> View Profile </a>
+                    </li>
+                    <li>
+                        <a href="#yourprojects"><i class="fa fa-briefcase fa-fw"></i> List of Projects </a>
+                    </li>
+					<li>
+                        <a href="#yourtasks"><i class="fa fa-tasks fa-fw"></i> Your Tasks </a>
+                    </li>
+                    <li>
+                        <a href="#searchprojects"><i class="fa fa-search fa-fw"></i> Search Projects </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </nav>
+        <!-- /.navbar-static-side -->
+		<div id="yourprofile" class="content">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Your Profile</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tag fa-fw"></i> About
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul id="prof">
+								<li class="prop">Name	  		<div class="disp"> {{profile_user.first_name}} {{profile_user.last_name}} </div></li>
+								<li class="prop">Email ID  		<div class="disp"> {{profile_user.email}}</div></li>
+								<li class="prop">Mobile    		<div class="disp"> {{profile.mobile}} </div></li>
+								<li class="prop">Place  		<div class="disp"> {{profile.place}} </div></li>
+								<li class="prop">Institute  		<div class="disp"> {{profile.institute}} </div></li>
+								<li class="prop">Department  		<div class="disp"> {{profile.department}} </div></li>
+								<li class="prop">Date Of Birth		<div class="disp"> {{profile.dob}}</div></li>
+							</ul>
+							<p><a href="{{ MEDIA_URL }}{{profile.cv}}">View CV</a></p>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-instagram fa-fw"></i> {{profile_user.first_name}} {{profile_user.last_name}}
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                           <img src="{{ MEDIA_URL}}{{ profile.profile_picture }}" width=200px height=300px norepeat style="padding-bottom:10px; float:center;"/>
+                            <a href="#" class="btn btn-default btn-block"><i class="fa fa-upload fa-fw"></i>Upload Profile Photo</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <!--<div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>
+                            Discussions
+                        </div>
+                        <div class="panel-body" id="discussions">
+                            <ul class="chat">
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Hello fellas....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 18 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Prasad Ayush Surender</strong>
+                                        </div>
+                                        <p>
+                                            Kuch kaam nahi hai kya??
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 17 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Shubham Kumar</strong> 
+                                        </div>
+                                        <p>
+                                            Arey tum log kya kar rahe ho... Tym waste mat karo
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 16 mins ago
+                                        </small>
+                                        
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+	                                         <strong class="primary-font">Ayush Kr</strong>
+                                        </div>
+                                        <p>
+                                            Arey o bara mujhe ek doubt hai mere room mein aa na....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 15 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Abey saale google kya apne gaar marane k liye banaya gaya hai kya
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 14 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>-->
+                        <!-- /.panel-body -->
+                        <!--<div class="addchat">
+                                <input size="20" class="inp1" type="text" onkeypress="chatupdate(this, event);" placeholder="Type your message here..." />
+                        </div>
+                        <!-- /.panel-footer
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+	</div>
+   
+	<div id="yourtasks" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Project_Title</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> Your Tasks
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                           {% if tasks %}
+                            <ul>
+                                {% for task in tasks %}
+                                                            <li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										{{ task.task_name }}
+										<div class="notdone">
+											<img src="{% static "assets/img/tick.png" %}" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<br />
+										<!--<input type="text" style="border:1px solid #ddd; height:25px;width:30px;margin-right:5px;float:left;text-align:center;" value="15" placeholder="DD" />
+										<input type="text" style="border:1px solid #ddd; height:25px;width:30px;margin-right:5px;float:left;text-align:center;" value="01" placeholder="MM" />	
+										<input type="text" style="border:1px solid #ddd; height:25px;width:50px;margin-right:5px;float:left;text-align:center;" value="2014" placeholder="YYYY" />																	
+										<input type="submit" value="Add deadline to this task" class="adddead" />-->
+										<div class="">
+											<h5><strong>Deadline</strong> : {{ task.task_deadline }} </h5>
+										</div>
+						    
+										<h5> People assigned to this task </h5>
+										<ul>
+                                                                                    {% for member in task.task_member.all %}
+											<li class="people">
+												<a href="/rango/profile/{{member.pk}}" class="file">{{member.username}}</a>
+											</li>
+                                                                                    {% endfor %}
+										</ul>
+										<h5> Files </h5>
+										<ul>
+                                                                                    {% for comment in task.task_comment.all %}
+                                                                                    {% if comment.comment_file %}
+                        
+											<li class="files">
+												<a href="{{ MEDIA_URL }}{{ comment.comment_file }}" target="_blank" class="file">{{ comment.comment_file }}</a>
+											</li>
+                                                                                        <br>
+                                                                                        {% endif %}
+										    {% endfor %}
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+										    {% for comment in task.task_comment.all %}
+                                                                                        <li>
+												<strong>{{comment.comment_user.username}}</strong> : {{ comment.comment_text }} at {{comment.comment_time}}
+											</li>
+                                                                                    {% endfor %}
+										</ul>
+									</div>
+								</li>
+                                                                {% endfor %}
+							</ul>
+                            {% else %}
+                            <p>There is no Task present</p>
+                            {% endif %}
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Your Notifications
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+        						<ul class="justlist"> </ul>			<!--Should be updated dynamically from the database using javascript-->
+							</div>
+                            <a href="#" class="btn btn-default btn-block">View All Notifications</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /#Your Tasks -->
+	<!-- Your Tasks -->
+	<div id="yourprojects" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Your Projects</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+				
+                   	<!--<ul class="image">
+						<li>
+							<img src="{% static "images/Left.png" %}" id="left1" width="100px" height="75px"/>
+						</li>
+						<li>
+							<a href="{% static "/project1.html" id="link"><img src="{% static "/images/project2.jpg" id="change" width="800px" height="600px"/></a>
+						</li> 
+						<li>
+							<img src="{% static "images/Right.png" %}" id="right1" width="100px" height="75px"/>
+						</li>				
+					</ul>-->
+						{% if projects %}
+						<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> Projects you created
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul>
+                                    {% for project in projects %}
+                                    <li><a href="/rango/project/{{ project.pk }}">{{ project.project_name }}</a></li>
+                                    {% endfor %}
+                            </ul>
+                        </div>
+						</div>
+                        {% if projects_as_member%}
+						<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> Projects you are a part of
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul>
+                                {% for project in projects_as_member %}
+                                    <li><a href="/rango/project/{{ project.pk }}">{{ project.project_name }}</a></li>
+                                {% endfor %}
+                            </ul>
+						</div>
+						</div>
+                        {% else %}
+                            <strong> There is no Project present</strong>
+                        {% endif %}                        
+        </div>
+    </div>		
+	<!-- /#Your Tasks -->
+	
+	<!-- About -->
+	<div id="searchprojects" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Search Projects</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+                {% csrf_token %}
+                <input type="text" id="search1" name="search1" />
+                
+                <ul id="search-results">
+                </ul>
+            </div>
+            <!-- /.row -->
+     </div>
+	</div>
+	</div>
+        
+	<!-- /#About -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="{% static "assets/js/jquery-1.10.2.js" %}"></script>
+    <script src="{% static "assets/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "assets/js/plugins/metisMenu/jquery.metisMenu.js" %}"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="{% static "assets/js/plugins/morris/raphael-2.1.0.min.js" %}"></script>
+    <script src="{% static "assets/js/plugins/morris/morris.js" %}"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="{% static "assets/js/sb-admin.js" %}"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="{% static "assets/js/demo/dashboard-demo.js" %}"></script>
+	<!--<script type="text/javascript">
+		function expand(el)	{
+			var list = document.getElementsByClassName("el");
+			var tabLink = getFirstChildWithTagName( el.parentNode, "DIV" );
+			for(var i=0;i<list.length;i++)	{
+				if(list[i]!=tabLink)	{
+					list[i].id="comment";
+					var elem=getFirstChildWithTagName(list[i].parentNode, "A" );
+					elem.className="list-group-item";
+				}
+			}
+			if(tabLink.id=="comment")	{
+				tabLink.id="comment-active";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item1";
+			}
+			else	{
+				tabLink.id="comment";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item";
+			}
+		}
+		function getFirstChildWithTagName(element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+		function retrieve(el) {
+			var tabLink = getFirstChildWithTagName( el.parentNode, "INPUT" );
+			var content = tabLink.value;
+			if(content!="")	{
+				el=el.parentNode.parentNode;
+				var list=getChildWithClassName(el, "taskcom");
+				var child=document.createElement("LI");
+				list.appendChild(child);
+				child.innerHTML = "<strong>Ranat</strong> : "+content;
+				tabLink.value = "";
+			}
+		}
+		function getChildWithClassName(element, classname) {
+			for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].className == classname ) return element.childNodes[i];
+      		}
+		}
+		function enter(e, event) {
+			/*var evt = window.event;*/
+			if(event.which == 13) {
+				retrieve(e);
+			}
+		}
+		function recievechat(el) {
+			var message=el.value;
+			el.value="";
+			if(message!="") {
+				var child=document.createElement("LI");
+				var child1=document.createElement("DIV");
+				var child2=document.createElement("DIV");
+				var child3=document.createElement("STRONG");
+				var child4=document.createElement("P");
+				var child5=document.createElement("SMALL");
+				var child6=document.createElement("I");
+				var child7=document.createTextNode("You");
+				var child8=document.createTextNode(message);
+				var child9=document.createTextNode("10 mins ago");
+				child5.className="text-muted";
+				child6.className="fa fa-clock-o fa-fw";
+				child5.appendChild(child6);
+				child5.appendChild(child9);
+				child4.appendChild(child8);
+				child3.className="primary-font";
+				child3.appendChild(child7);
+				child2.className="header";
+				child2.appendChild(child3);
+				child1.appendChild(child2);
+				child1.appendChild(child4);
+				child1.appendChild(child5);
+				child.appendChild(child1);
+				child.className="right clearfix";
+				el=el.parentNode;
+				el=el.parentNode;
+				el=getChildWithClassName(el,"panel-body");
+				var temp=el;
+				el=getChildWithClassName(el,"chat");
+				el.appendChild(child);
+				scrollbar(temp);
+			}
+		}
+		function chatupdate(e, event) {
+			if(event.which == 13) {
+				recievechat(e);
+			}
+		}
+		function check(el) {
+			var elem=el.parentNode;
+			elem=elem.parentNode;
+			elem=elem.parentNode;
+			elem=getFirstChildWithTagName(elem,"A");
+			elem=getFirstChildWithTagName(elem,"DIV");
+			if(el.checked==true) {
+				elem.className="done";
+			}else {
+				elem.className="notdone";
+			}
+		}
+		function scrollbar(el) {
+			el.scrollTop = el.scrollHeight;
+		}
+	</script>-->
+</body>
+
+</html>
+<!--
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rango</title>
+    </head>
+
+    <body>
+        <a href="/rango/"><strong>HOME</strong></a><br />
+        <h1>Profile details : </h1>
+        <a href="/rango/profile/edit/"><strong>EDIT</strong></a><br />
+
+        <p>First name: {{user.first_name}}</p> 
+        <p>Last name: {{user.last_name}}</p>
+        <p>Username: {{user.username}}</p>
+        <p>Email address: {{user.email}}</p>
+        <p>Profile picture: {{profile.profile_picture}}</p>
+        <p>Cv: {{profile.cv}}</p>
+        <p>Place: {{profile.place}}</p>
+        <p>Mobile : {{profile.mobile}}</p>
+        <p>Dob: {{profile.dob}}</p>
+        <p>Gender: {{profile.gender}}</p>
+        <p>Institute: {{profile.institute}}</p>
+        <p>Department: {{profile.department}}</p>
+  
+        
+    </body>
+</html>-->

@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Project_Title</title>				<!--Should be updated from database -->
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">			<!--add task, delete task, add member to task, remove member from task, manager corner, edit project, declare project completed-->
+
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+	<style type="text/css">
+		input[type="checkbox"] {float:right;}
+		ul {list-style-type:none;}
+		.done {
+			float:right;
+			width:20px;
+			height:20px;
+		}
+		.notdone {
+			display:none;
+		}
+		li {display:block;}
+		a.list-group-item1 {
+			text-decoration:none;
+			background-color:#f5f5f5;
+			border-top-right-radius:4px;
+			border-top-left-radius:4px;
+			position:relative;
+			display:block;
+			padding:10px 15px;
+			margin;-1px;
+			border:1px solid #ddd;
+		}
+		#comment {
+			display:none;
+			height:auto;
+			background: #FFFFFF;
+			border-width:2px;
+			overflow-y: auto;
+			border-bottom-left-radius:3px;
+			border-bottom-right-radius:3px;
+			border:1px solid #ddd;
+			z-index: 1000;
+			padding:10px;
+			-webkit-transition: all 0.4s ease 0s;
+			-moz-transition: all 0.4s ease 0s;
+			-ms-transition: all 0.4s ease 0s;
+			-o-transition: all 0.4s ease 0s;
+			transition: all 0.4s ease 0s;
+		}
+		#comment-active {
+			height:auto;
+			background: #FFFFFF;
+			border-width:2px;
+			overflow-y: auto;
+			border-bottom-left-radius:3px;
+			border-bottom-right-radius:3px;
+			border:1px solid #ddd;
+			z-index: 1000;
+			padding:10px;
+			-webkit-transition: all 0.4s ease 0s;
+			-moz-transition: all 0.4s ease 0s;
+			-ms-transition: all 0.4s ease 0s;
+			-o-transition: all 0.4s ease 0s;
+			transition: all 0.4s ease 0s;
+		}
+		li {
+			margin-bottom:2px;
+		}
+		ul .taskcom {
+			display:block;
+			list-style-type:none;
+			padding-left:0;
+			padding-right:0;
+			margin:5px;
+		}
+		ul .taskcom li {
+			width:100%;
+			background:#F2F2F2;
+			color:#000000;
+			padding:5px;
+			border-radius:2px;
+			margin-left:5px;
+			margin-right:8px;
+		}
+		.inp {
+			width:100%;
+			height:30px;
+			border-radius:2px;
+			border-width:1px;
+			padding:5px;
+			margin-left:5px;
+			margin-right:8px;
+			border:solid #F2F2F2 2px;
+		}
+		.inp1 {
+			width:100%;
+			height:30px;
+			border-radius:2px;
+			border-width:1px;
+			padding:5px;
+			border:solid #F2F2F2 2px;
+		}
+		.addcom {
+			border-radius:2px;
+			border-width:1px;
+			padding-left:0;
+			padding-right:0;
+			margin:5px;
+		}
+		.sub {
+			height:30px;
+			margin-left:5px;
+			margin-right:8px;
+			width:100px;
+		}
+		.hide, .hide1 {
+			display:none;
+		}
+		.addchat {
+			padding:10px 15px;
+			background-color:#f5f5f5;
+			border-top:1px solid #ddd;
+			border-bottom-right-radius:3px;
+			border-bottom-left-radius:3px;
+			border-radius:2px;
+			width:100%;
+		}
+		.subj {
+			width:200px;
+			height:100%;
+			float:left;
+			text-align:left;
+		}
+		.desp {
+			height:auto;
+			width:300px;
+			float:right;
+			text-align:left;
+		}
+		.desp1 {
+			height:auto;
+			width:300px;
+			float:right;
+			text-align:justify;
+		}
+		.about-part {
+			display:block;
+			width:100%;
+			margin-bottom:10px;
+			height:auto;
+		}
+		.bin {
+			float:right;
+		}
+		.addtask {
+			width:120px;
+			height:40px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-bottom:10px;
+			margin-left:55px;
+			text-align:center;
+		}
+		.addtask:hover {
+			background-color:#BDBDBD;
+		}
+		li .files {
+			display:inline-block;
+			width:100px;
+			height:30px;
+			padding:5px;
+			text-align:center;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			color:#000000;
+			margin:0px;
+		}
+		li .files:hover {
+			background-color:#ddd;
+		}
+		a .file {
+			text-decoration:none;
+			margin:0;
+			color:#000000;
+		}
+		li .people {
+			display:block;
+			min-width:200px;
+			max-width:300px;
+			height:30px;
+			padding:5px;
+			text-align:center;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			color:#000000;
+			margin:2px;
+		}
+		li .people:hover {
+			background-color:#ddd;
+		}
+		.addpeop {
+			height:40px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-top:10px;
+			margin-left:42px;
+			padding:10px;
+			text-align:center;
+			border-width:0px;
+		}
+		.addpeop:hover {
+			background-color:#BDBDBD;
+		}
+		.adddead {
+			height:40px;
+			border-radius:2px;
+			background-color:#f5f5f5;
+			margin-bottom:10px;
+			padding:10px;
+			margin-left:42px;
+			text-align:center;
+			border-width:0px;
+		}
+		.adddead:hover {
+			background-color:#BDBDBD;
+		}
+		.overlay {
+			visibility:hidden;
+			position:absolute;
+			width:100%;
+			height:100%;
+			left:0px;
+			top:0px;
+			text-align:center;
+		}
+		.overlay div {
+			width:500px;
+			height:500px;
+			margin:100px auto;
+			border:1px solid #000;
+			border-radius:5px;
+			padding:15px;
+			text-align:center;
+		}
+		.taskname {
+			width:100%;
+			height:30px;
+			text-align:center;
+			float:center;
+			margin:5px;
+		}
+		.taskdate {
+			margin:5px;
+			height:30px;
+		}
+}
+	</style>
+	<script type="text/javascript">
+		var tabLinks = new Array();
+    	var contentDivs = new Array();
+    	function init()	{
+			var tabListItems = document.getElementById('side-menu').childNodes;
+      		for ( var i = 0; i < tabListItems.length; i++ ) {
+        		if ( tabListItems[i].nodeName == "LI" ) {
+        			var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+          			var id = getHash(tabLink.getAttribute('href') );
+          			tabLinks[id] = tabLink;
+          			contentDivs[id] = document.getElementById( id );
+        		}
+      		}
+      		// Assign onclick events to the tab links, and
+      		// highlight the first tab
+      		var i = 0;
+			
+      		for ( var id in tabLinks ) {
+        		tabLinks[id].onclick = showTab;
+        		tabLinks[id].onfocus = function() { this.blur() };
+        	}
+
+      		// Hide all content divs except the first
+      		var i = 0;
+			var e=document.getElementById("discussions");
+			e.scrollTop=e.scrollHeight;
+
+      		for ( var id in contentDivs ) {
+        		if ( i != 0 ) contentDivs[id].className = "hide";
+        			i++;
+      		}
+			alert("hello");
+			var checks=document.getElementsByTagName("INPUT");
+			for(i=0;i<checks.length;i++)	{
+				el=checks[i];
+				if(el.type=="checkbox") {
+					var elem=el.parentNode;
+					elem=elem.parentNode;
+					elem=elem.parentNode;
+					elem=getFirstChildWithTagName(elem,"A");
+					elem=getFirstChildWithTagName(elem,"DIV");
+					if(el.checked==true) {
+						elem.className="done";
+					}else {
+						elem.className="notdone";
+					}
+				}
+			}
+		}
+		function showTab() {
+      		var selectedId = getHash(this.getAttribute('href') );
+      		var selectedId2 = this.getAttribute('value');
+			// Highlight the selected tab, and dim all others.	
+      		// Also show the selected content div, and hide all others.
+      		for ( var id in contentDivs ) {
+        		if ( id == selectedId ) {
+          			contentDivs[id].className = 'content';
+        		} else {
+          			contentDivs[id].className = 'hide';
+        		}
+      		}
+
+      		// Stop the browser following the link
+      		return false;
+    	}
+    	function getFirstChildWithTagName( element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+    	function getHash( url ) {
+      		var hashPos = url.lastIndexOf ( '#' );
+      		return url.substring( hashPos + 1 );
+    	}
+    	function changeTitle(title) {
+    		document.title = title;
+    	}
+	</script>
+
+</head>
+
+<body onload="init()">
+
+	<div class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
+					<h4 class="modal-title">Add New Task</h4>
+				</div>
+				<form action="./profile.html">
+				<div class="modal-body">
+					<input type="text" placeholder="Enter Task Name" class="taskname" />
+					<div style="text-align:center;"><h5> Enter deadline date <input type="date" class="taskdate" /> </h5></div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-primary" onclick="addtask();" value="Add Task">
+				</div>
+				</form>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<div class="body1">
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Project_Member</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_1</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Member_4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="profile.html"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="index.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <!-- /.navbar-static-top -->
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="#dashboard"><i class="fa fa-desktop fa-fw"></i> Dashboard </a>
+                    </li>
+                    <li>
+                        <a href="#yourtasks"><i class="fa fa-tasks fa-fw"></i> Your Tasks </a>
+                    </li>
+					<li>
+                        <a href="#editproject"><i class="fa fa-edit fa-fw"></i> Edit Project Details </a>
+                    </li>
+                    <li>
+                        <a href="#about"><i class="fa fa-tag fa-fw"></i> About </a>
+                    </li>
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </nav>
+        <!-- /.navbar-static-side -->
+		<div id="dashboard" class="content">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Project_Title</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+	
+			<!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> All Tasks
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Index Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<input type="submit" value="Add deadline to this task" class="adddead" />
+										<div class="hide">
+											<h5><strong>Deadline</strong> : 15 April, 2014</h5>
+										</div>
+										<div class="bin" onclick="deletetask(this);">
+											<img src="./img/bin.png" title="Delete Task" width="30px" height="30px">
+										</div>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<input type="button" class="addpeop" value="Add people to this task" />
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Profile Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<input type="submit" value="Add deadline to this task" class="adddead" />
+										<div class="hide">
+											<h5><strong>Deadline</strong> : 15 April, 2014</h5>
+										</div>
+										<div class="bin" onclick="deletetask(this);">
+											<img src="./img/bin.png" title="Delete Task" width="30px" height="30px">
+										</div>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<input type="button" class="addpeop" value="Add people to this task" />
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Project Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<input type="submit" value="Add deadline to this task" class="adddead" />
+										<div class="hide">
+											<h5><strong>Deadline</strong> : 15 April, 2014</h5>
+										</div>
+										<div class="bin" onclick="deletetask(this);">
+											<img src="./img/bin.png" title="Delete Task" width="30px" height="30px">
+										</div>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<input type="button" class="addpeop" value="Add people to this task" />
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Manager Project Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<input type="submit" value="Add deadline to this task" class="adddead" />
+										<div class="hide">
+											<h5><strong>Deadline</strong> : 15 April, 2014</h5>
+										</div>
+										<div class="bin" onclick="deletetask(this);">
+											<img src="./img/bin.png" title="Delete Task" width="30px" height="30px">
+										</div>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<input type="button" class="addpeop" value="Add people to this task" />
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<!-- /.panel-body -->
+						<input type="submit" title="Add new task" class="addtask" value="Add new task" onclick="togglemodal();"/>
+					</div>
+					<!-- /.modal -->
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+        						<ul class="justlist"> </ul>			<!--Should be updated dynamically from the database using javascript-->
+							</div>
+                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <div class="chat-panel panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>
+                            Discussions
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="discussions">
+                            <ul class="chat">
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Hello fellas....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 18 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Prasad Ayush Surender</strong>
+                                        </div>
+                                        <p>
+                                            Kuch kaam nahi hai kya??
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 17 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Shubham Kumar</strong> 
+                                        </div>
+                                        <p>
+                                            Arey tum log kya kar rahe ho... Tym waste mat karo
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 16 mins ago
+                                        </small>
+                                        
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+	                                         <strong class="primary-font">Ayush Kr</strong>
+                                        </div>
+                                        <p>
+                                            Arey o bara mujhe ek doubt hai mere room mein aa na....
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 15 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                                <li class="left clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
+                                        </div>
+                                        <p>
+                                            Abey saale google kya apne gaar marane k liye banaya gaya hai kya
+                                        </p>
+                                        <small class="pull-right text-muted">
+                                            <i class="fa fa-clock-o fa-fw"></i> 14 mins ago
+                                        </small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.panel-body -->
+                        <div class="addchat">
+                                <input size="20" class="inp1" type="text" onkeypress="chatupdate(this, event);" placeholder="Type your message here..." />
+                        </div>
+                        <!-- /.panel-footer -->
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+	</div>
+	
+	<!-- Your Tasks -->
+	<div id="yourtasks" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Project_Title</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> Your Tasks
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Index Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<form>
+											<strong> Have you completed this task? </strong>
+											<input type="checkbox" name="done" value="Yes" onclick="check(this);" size="10" />
+										</form>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Profile Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<form>
+											<strong> Have you completed this task? </strong>
+											<input type="checkbox" name="done" value="Yes" onclick="check(this);" size="10" />
+										</form>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Marwa lo apni
+											</li>											
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Project Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<form>
+											<strong> Have you completed this task? </strong>
+											<input type="checkbox" name="done" value="Yes" onclick="check(this);" size="10" />
+										</form>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Marwa lo apni
+											</li>											
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Manager Project Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<form>
+											<strong> Have you completed this task? </strong>
+											<input type="checkbox" name="done" value="Yes" onclick="check(this);" size="10" />
+										</form>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Marwa lo apni
+											</li>											
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+							</ul>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Your Notifications
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+        						<ul class="justlist"> </ul>			<!--Should be updated dynamically from the database using javascript-->
+							</div>
+                            <a href="#" class="btn btn-default btn-block">View All Notifications</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /#Your Tasks -->
+	
+	<!-- About -->
+	<div id="about" class="hide">
+		<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Project_Title</h1>		<!--Project title must be updated from the database-->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-tasks fa-fw"></i> About this project
+						</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+								<div class="about-part">
+									<div class="subj">
+										<strong> Subject </strong>
+									</div>
+									<div class="desp">
+										Project Management System
+									</div>
+								</div>
+								<br />
+								<div class="about-part">
+									<div class="subj">
+										<strong> Start Date </strong>
+									</div>
+									<div class="desp">
+										January 15th
+									</div>
+								</div>
+								<br />
+								<div class="about-part">
+									<div class="subj">
+										<strong> Deadline Date </strong>
+									</div>
+									<div class="desp">
+										April 15th
+									</div>
+								</div>
+								<br />
+								<div class="about-part">
+									<div class="subj">
+										<strong> Department </strong>
+									</div>
+									<div class="desp">
+										Computer Science
+									</div>
+								</div>
+								<br />
+								<div class="about-part">
+									<div class="subj">
+										<strong> Description </strong>
+									</div>
+									<div class="desp1">
+										Setting the border to 0 seems to allow the user to change the size of the button and have the browser render it in that size for eg. the above height: 2em will render the button at twice the line height. This also works for checkboxes (input[type=checkbox]). Some browsers render better than others.
+									</div>
+								</div>
+						</div>
+                        <!-- /.panel-body -->
+                    </div>
+					<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+			</div>
+		</div>
+	</div>
+	</div>
+	<!-- /#About -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-modal.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+	<script type="text/javascript">
+		function expand(el)	{
+			var list = document.getElementsByClassName("el");
+			var tabLink = getFirstChildWithTagName( el.parentNode, "DIV" );
+			for(var i=0;i<list.length;i++)	{
+				if(list[i]!=tabLink)	{
+					list[i].id="comment";
+					var elem=getFirstChildWithTagName(list[i].parentNode, "A" );
+					elem.className="list-group-item";
+				}
+			}
+			if(tabLink.id=="comment")	{
+				tabLink.id="comment-active";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item1";
+			}
+			else	{
+				tabLink.id="comment";
+				var elem=getFirstChildWithTagName(tabLink.parentNode, "A" );
+				elem.className="list-group-item";
+			}
+		}
+		function getFirstChildWithTagName(element, tagName ) {
+      		for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+      		}
+    	}
+		function retrieve(el) {
+			var tabLink = getFirstChildWithTagName( el.parentNode, "INPUT" );
+			var content = tabLink.value;
+			if(content!="")	{
+				el=el.parentNode.parentNode;
+				var list=getChildWithClassName(el, "taskcom");
+				var child=document.createElement("LI");
+				list.appendChild(child);
+				child.innerHTML = "<strong>Ranat</strong> : "+content;
+				tabLink.value = "";
+			}
+		}
+		function getChildWithClassName(element, classname) {
+			for ( var i = 0; i < element.childNodes.length; i++ ) {
+        		if ( element.childNodes[i].className == classname ) return element.childNodes[i];
+      		}
+		}
+		function enter(e, event) {
+			/*var evt = window.event;*/
+			if(event.which == 13) {
+				retrieve(e);
+			}
+		}
+		function recievechat(el) {
+			var message=el.value;
+			el.value="";
+			if(message!="") {
+				var child=document.createElement("LI");
+				var child1=document.createElement("DIV");
+				var child2=document.createElement("DIV");
+				var child3=document.createElement("STRONG");
+				var child4=document.createElement("P");
+				var child5=document.createElement("SMALL");
+				var child6=document.createElement("I");
+				var child7=document.createTextNode("You");
+				var child8=document.createTextNode(message);
+				var child9=document.createTextNode("10 mins ago");
+				child5.className="text-muted";
+				child6.className="fa fa-clock-o fa-fw";
+				child5.appendChild(child6);
+				child5.appendChild(child9);
+				child4.appendChild(child8);
+				child3.className="primary-font";
+				child3.appendChild(child7);
+				child2.className="header";
+				child2.appendChild(child3);
+				child1.appendChild(child2);
+				child1.appendChild(child4);
+				child1.appendChild(child5);
+				child.appendChild(child1);
+				child.className="right clearfix";
+				el=el.parentNode;
+				el=el.parentNode;
+				el=getChildWithClassName(el,"panel-body");
+				var temp=el;
+				el=getChildWithClassName(el,"chat");
+				el.appendChild(child);
+				scrollbar(temp);
+			}
+		}
+		function chatupdate(e, event) {
+			if(event.which == 13) {
+				recievechat(e)
+			}
+		}
+		function check(el) {
+			var elem=el.parentNode;
+			elem=elem.parentNode;
+			elem=elem.parentNode;
+			elem=getFirstChildWithTagName(elem,"A");
+			elem=getFirstChildWithTagName(elem,"DIV");
+			if(el.checked==true) {
+				elem.className="done";
+			}else {
+				elem.className="notdone";
+			}
+		}
+		function scrollbar(el) {
+			el.scrollTop = el.scrollHeight;
+		}
+		function deletetask(el) {
+			var r=window.confirm("Are you sure you want to delete this task?");
+			if(r==true) {
+				el=el.parentNode;
+				el=el.parentNode;
+				var top=el.parentNode;
+				top.removeChild(el);
+			}
+		}
+		function addtask(el) {
+			if(r==true) {
+				
+				var child1=document.createElement("LI");
+				var child2=document.createElement("A");
+				var child3=document.createElement("DIV");
+				var child4=document.createElement("DIV");
+				var child5=document.createElement("DIV");
+				var child6=document.createElement("H5");
+				var child7=document.createElement("UL");
+				var child8=document.createElement("H5");
+				var child9=document.createElement("UL");
+				var child10=document.createElement("H5");
+				var child11=document.createElement("UL");
+				var child12=document.createElement("DIV");
+				var child13=document.createElement("IMG");
+				var child14=document.createElement("IMG");
+				var child15=document.createElement("INPUT");
+				child2.onclick="expand(child2);";
+				child2.href="#";
+				child2.className="list-group-item";
+				child2.id="com";
+				child3.id="comment";
+				child3.className="el";
+				child4.className="notdone";
+				child5.className="bin";
+				child5.onclick="deletetask(this);";
+				child11.className="taskcom";
+				child12.className="addcom";
+				child13.src="./img/tick.png";
+				child13.title="Task Completed";
+				child13.width="15px";
+				child13.height="15px";
+				child14.src="./img/bin.png";
+				child14.title="Delete Task";
+				child14.width="30px";
+				child14.height="30px";
+			}
+		}
+/*								<li>
+									<a href="#" onclick=expand(this) class="list-group-item" id="com">
+										Index Page
+										<div class="notdone">
+											<img src="./img/tick.png" title="Task Completed" width="15px" height="15px">
+										</div>
+									</a>
+									<div id="comment" class="el">
+										<div class="bin" onclick="deletetask(this);">
+											<img src="./img/bin.png" title="Delete Task" width="30px" height="30px">
+										</div>
+										<h5> People assigned to this task </h5>
+										<ul>
+											<li class="people">
+												<a href="./profile.html" class="file">Ranat Ghosh</a>
+											</li>
+											<li class="people">
+												<a href="./profile.html" class="file">Shubham Kumar</a>
+											</li>
+										</ul>
+										<h5> Files </h5>
+										<ul>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 1</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 2</a> 
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 3</a>
+											</li>
+											<li class="files">
+												<a href="./movie.mp4" target="_blank" class="file">File 4</a>
+											</li>
+										</ul>
+										<h5> Comments </h5>
+										<ul class="taskcom">
+											<li>
+												<strong>Ayush Kr</strong> : Ho gaya?
+											</li>
+											<li>
+												<strong>Ranat</strong> : Nahi Bhai
+											</li>
+											<li>
+												<strong>Ayush Kr</strong> : Kab Hoga?
+											</li>
+										</ul>
+										<div class="addcom">
+											<input size="20" type="text" class="inp" onkeypress="enter(this, event);" placeholder="Enter comment here" title="Add comment"/>
+										</div>
+									</div>
+								</li>
+*/
+		function togglemodal() {
+			var elem=document.getElementsByClassName("modal fade");
+			var elem1=document.getElementsByClassName("body1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="hide1";
+			el.className="modal-dialog";
+		}
+		function reset() {
+			var elem=document.getElementsByClassName("modal-dialog");
+			var elem1=document.getElementsByClassName("hide1");
+			var el=elem[0];
+			var el1=elem1[0];
+			el1.className="body1";
+			el.className="modal fade";
+		}
+	</script>
+</body>
+
+
+</html>
