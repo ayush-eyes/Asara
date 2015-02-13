@@ -1,0 +1,31 @@
+<ul class="chat" style="font-size:13px;">
+{% for msg in chats %}
+        {% ifequal uid msg.chat_user.username %}
+           <li class="right clearfix">
+            <div class="">
+                <div class="header">
+                    <strong class="primary-font">You</strong>
+                    : {{msg.chat_message}}
+            </div>
+            <small class="text-muted">
+                    <i class="fa fa-clock-o fa-fw"></i>{{msg.chat_time}}
+            </small>
+        </div>
+           </li>
+           {% endifequal %}
+           {% ifnotequal uid msg.chat_user.username %}
+        <li class="left clearfix">
+            <div class="chat-body clearfix">
+                <div class="header">
+                    <strong class="primary-font">{{msg.chat_user.first_name}}
+{{msg.chat_user.last_name}}</strong>
+                    : {{msg.chat_message}}
+            </div>
+            <small class="pull-right text-muted">
+                    <i class="fa fa-clock-o fa-fw"></i>{{msg.chat_time}}
+            </small>
+        </div>
+           </li>
+           {% endifnotequal %}
+{% endfor %}
+</ul>

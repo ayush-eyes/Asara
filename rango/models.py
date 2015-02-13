@@ -51,7 +51,11 @@ class Task(models.Model):
     
 class Notification(models.Model):
     applicants = models.ManyToManyField(User, blank=True, null=True)
-    
+
+class Chat(models.Model):
+    chat_message = models.CharField(max_length=200)
+    chat_time = models.DateTimeField(auto_now_add=True)
+    chat_user = models.ForeignKey(User)
 
 class Project(models.Model):
     project_leader = models.ForeignKey(User, related_name="leader")
@@ -68,6 +72,7 @@ class Project(models.Model):
     project_task = models.ManyToManyField(Task,blank=True, null=True)
     project_created = models.DateTimeField(auto_now_add=True)
     project_notification = models.OneToOneField(Notification, blank=True, null=True)
+    project_chat=models.ManyToManyField(Chat,blank=True,null=True)
     
     def __unicode__(self):
         return str(self.project_leader.username).replace(' ','_') + "_" + str(self.project_name).replace(' ','_')

@@ -9,7 +9,6 @@
     <meta name="author" content="RANAT GHOSH" >
 
     <link rel="shortcut icon" href="{% static "assets/images/logo.jpg" %}"><title>Welcome to Asara</title>
-    <!--<img src="{% static "assets/images/anwesh.jpg" %} " alt="No image found"/>
     <!-- Bootstrap core CSS -->
     <link href="{% static "assets/css/bootstrap.css" %}" rel="stylesheet">
     
@@ -441,7 +440,16 @@
       		}
     	}
     	function pcheck(e, event)	{
-    		if((event.which>=65&&event.which<=90) || (event.which>=97&&event.which<=122) || event.which==50 || event.which==46 || event.which==95 || event.which==64 || (event.which>=48&&event.which<=57) || event.which==8 || event.which==0 )	{
+                if((event.which>=65&&event.which<=90) || (event.which>=97&&event.which<=122) || event.which==50 || event.which==46 || event.which==95 || event.which==64 || (event.which>=48&&event.which<=57) || event.which==8 || event.which==0 )	{
+		}
+		else {
+    			event.preventDefault();
+    			e.id="inperror";
+    			e2=e.parentNode;
+			e1=getFirstChildWithTagName(e2,"SPAN");
+			e1.innerHTML="password can contain only alphabets, digits and symbols @ or . or _";
+			e1.style.visibility="visible";
+		}
     			if(e.value.length<6)	{
     				e.id="inperror";
     				e=e.parentNode;
@@ -463,15 +471,6 @@
 					e1.innerHTML="Password strength - medium";
 					e1.style.visibility="visible";
 					e1.style.color="#FFFFFF";
-				}
-			}
-			else {
-    				event.preventDefault();
-    				e.id="inperror";
-    				e=e.parentNode;
-					e1=getFirstChildWithTagName(e,"SPAN");
-					e1.innerHTML="password can contain only alphabets, digits and symbols @ or . or _";
-					e1.style.visibility="visible";
 			}
     	}
     	function pcheck1(e)	{

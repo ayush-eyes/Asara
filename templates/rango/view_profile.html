@@ -396,7 +396,6 @@
 			margin-top:30px;
 		}
 		#search-results a li	{
-			width:700px;
 			border-bottom: 1px solid #DDD;
 			min-height: 20px;
 			margin-bottom: 0px;
@@ -414,6 +413,40 @@
 			color: #000;
 		}
 		#search-results a	h4 {
+			text-decoration:none;
+			color: #428bca;
+		}
+                #search-result ul { padding: 0px;}
+                #search-result	{
+			display:block;
+			padding:0px;
+			margin-top:30px;
+		}
+		#search-result a li	{
+			border-bottom: 1px solid #DDD;
+			min-height: 20px;
+			margin-bottom: 0px;
+			margin-top: 0px;
+                        margin-left: 0px;
+                        width: auto;
+                        text-align: center;
+			border-radius:2px;
+			padding:3px;
+			padding-left:0px;
+		}
+		#search-result li   {
+			margin-top:0px;
+		}
+		#search-result li:hover	{
+			background-color: #ECE3E3;
+		}
+		#search-result a	{
+			width:700px;
+			text-decoration:none;
+			color: #000;
+                        margin:0px;
+		}
+		#search-result a	h4 {
 			text-decoration:none;
 			color: #428bca;
 		}
@@ -800,7 +833,7 @@
 				</div>
                                 <!--<form id="UserUpdateForm" method="post" action="/rango/profile/edit/">
 				{% csrf_token %} -->
-                                <form id="user_form" method="post" action="" enctype="multipart/form-data">
+                                <form id="user_form" method="post" action="" enctype="multipart/form-data" onsubmit="return(edit_profile_validation(event,this));">
                                     {% csrf_token %}
 				<div class="modal-body">
                                                         {{ user_form.as_p }}
@@ -1132,10 +1165,10 @@
                             <i class="fa fa-list fa-fw"></i> Projects you created
 						</div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
+                        <div class="panel-body" id="search-result">
                             <ul>
                                     {% for project in projects %}
-                                    <li><a href="/rango/project/{{ project.pk }}">{{ project.project_name }}</a></li>
+                                    <a href="/rango/project/{{ project.pk }}"><li><h4>{{ project.project_name }}</h4>{{project.project_description}}</li></a>
                                     {% endfor %}
                             </ul>
                         </div>
@@ -1147,10 +1180,10 @@
                             <i class="fa fa-list fa-fw"></i> Projects you are a part of
 						</div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
+                        <div class="panel-body" id="search-result">
                             <ul>
                                 {% for project in projects_as_member %}
-                                    <li><a href="/rango/project/{{ project.pk }}">{{ project.project_name }}</a></li>
+                                    <a href="/rango/project/{{ project.pk }}"><li><h4>{{ project.project_name }}</h4>{{project.project_description}}</li></a>
                                 {% endfor %}
                             </ul>
 						</div>
@@ -1171,7 +1204,7 @@
                 </div>
                 <!-- /.col-lg-12 -->
                 {% csrf_token %}
-                <input type="text" id="search1" name="search1" />
+                <input type="text" id="search1" name="search1" placeholder="Type here" />
                 
                 <ul id="search-results">
                 </ul>
@@ -1224,6 +1257,38 @@
     			}
     		}
     	}
+		function edit_profile_validation(event,el)	{
+    		var first_name=document.getElementById("id_first_name");
+    		var last_name=document.getElementById("id_last_name");
+    		var username=document.getElementById("id_username");
+			var dept=document.getElementById("id_department");
+			
+    		if(first_name.value=="")	{
+    			alert("First Name can't be empty");
+    			return false;
+    		}
+    		else	{
+    			if(last_name.value=="")	{
+    				alert("Last name can't be empty");
+    				return false;
+					}
+				else	{
+					if(dept.options[0].selected)	{
+    				alert("Department not selected");
+    				return false;
+						}
+					else	{						
+							if(username.value=="")	{
+							alert("username can't be empty");
+							return false;
+							}
+							else	{
+								return true;
+							}
+						}
+					}
+				}
+			}	
     </script>
 </body>
 </html>

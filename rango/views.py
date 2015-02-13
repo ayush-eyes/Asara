@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from rango.forms import UserForm, UserProfileForm, CommentForm, ProjectForm, TaskForm, UserUpdateForm
+from rango.forms import UserForm, UserProfileForm, CommentForm, ProjectForm, TaskForm, UserUpdateForm, chatform
 from rango.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -93,18 +93,9 @@ def view_profile(request,user_id_url):
             else:
                 print form.errors
 
-    '''return render_to_response(
-            'rango/edit_profile.html',
-            {#'first_name':fname, 'last_name':lname, 'username':uname, 'email':email, 'password':password,
-             'user_form': user_form, 'profile_form': profile_form},
-            context)'''
-
-    
     return render_to_response('rango/view_profile.html',{'profile':user_profile,'profile_user':profile_user,'projects':project_list,
                                                          'projects_as_member':project_list1,'user_form':user_form,'profile_form':profile_form,
                                                          'project_form':project_form,'tasks':task_list, 'id':u.pk ,'loggedin_user':loggedin_user},context)
-
-
 
 
 def user_login(request):
@@ -128,7 +119,7 @@ def user_login(request):
                     return HttpResponse("Your Rango account is disabled.")
             else:
                 print "Invalid login details: {0}, {1}".format(username, password)
-                return HttpResponse("Invalid login details supplied.")
+                return HttpResponse("Invalid Login details")
 
 
     
@@ -164,6 +155,7 @@ def user_login(request):
         profile_form = UserProfileForm()
         return render_to_response('rango/login.html', {'user_form':user_form,'profile_form':profile_form }, context)
 
+
 @login_required
 def project(request, project_id_url):
     context = RequestContext(request)
@@ -176,6 +168,7 @@ def project(request, project_id_url):
     members = project.project_members.all()
     applicants = project.project_notification.applicants.all()
     leader = project.project_leader
+    height=200+50*len(members)
     curr_user = request.user
     if(curr_user.username==leader.username):
         is_leader=True
@@ -210,15 +203,19 @@ def project(request, project_id_url):
                 curr_task = tasks.get(pk=task_pk)
                 curr_task.task_comment.add(comment)
         elif "add_task" in request.POST:
-            form = TaskForm(request.POST)
-            if form.is_valid():
-                task = form.save(commit=False)
-                form.save(commit=True)
-                project = Project.objects.get(pk=project_id_url)
-                project.project_task.add(task)
-                return HttpResponseRedirect("/rango/project/%s/"%(project_id_url))
-            else :
-                return HttpResponseRedirect("")
+            task=Task(task_name=request.POST['task_name'],task_description=request.POST['task_description'],task_deadline=request.POST['task_deadline'])
+            task.save()
+            p=task.pk
+            project = Project.objects.get(pk=project_id_url)
+            project.project_task.add(task)
+            task_members_list = request.POST.getlist('task_members')
+            task=task.save()
+            task=Task.objects.get(pk=p)
+            for member in task_members_list:
+                task_member=User.objects.get(username=member)
+                task.task_member.add(task_member)
+                
+            return HttpResponseRedirect("/rango/project/%s/"%(project_id_url))
         
         elif "apply" in request.POST:
             project.project_notification.applicants.add(request.user)
@@ -318,7 +315,7 @@ def project(request, project_id_url):
         context_dict['is_member']=is_member
         context_dict['is_leader']=is_leader
         context_dict['is_other']=is_other
-        
+        context_dict['height']=height
     except Project.DoesNotExist:
         pass
     return render_to_response('rango/project.html',context_dict,context)
@@ -353,6 +350,7 @@ def search_profiles(request):
         project_id=request.GET['project_id']
     else:
         user_search_text=None
+
     project=Project.objects.get(pk=project_id)
     project_members = project.project_members.all()
     users=User.objects.filter(username__contains=user_search_text)
@@ -363,7 +361,7 @@ def search_profiles(request):
             L.append(user)
     if (user_search_text==''):
         L=[]
-        
+    print(L)        
     return render_to_response('rango/user_search.html',{'users':L,'project_id':project_id})
 
 @login_required
@@ -374,7 +372,7 @@ def add_member(request):
         project_id=request.GET['project_id']
     else:
         user_search_text=None
-    
+    print (user_search_text)
     
     project=Project.objects.get(pk=project_id)
     project_members=project.project_members.all()
@@ -392,3 +390,28 @@ def add_member(request):
         G=[]
         
     return render_to_response('rango/task_add_people.html',{'project_members':G , 'task_id':task_id , 'project_id':project_id})
+
+@login_required
+def chatsend(request):
+    if request.method=="POST":
+        pid=request.POST['project_id']
+        data1={
+            'chat_message':request.POST['chat_message'],
+            'chat_user':request.user.id
+        }
+        form=chatform(data=data1)
+        chat=form.save()
+        chat.save()
+        print(chat.chat_message)
+        project=Project.objects.get(pk=pid)
+        project.project_chat.add(chat)
+        project.save()
+
+@login_required
+def chatrefresh(request):
+    if request.method=="POST":
+        pid=request.POST['project_id']
+        project=Project.objects.get(pk=pid)
+        chats=project.project_chat.all()
+        uid=request.POST['user_username']
+        return render_to_response('rango/chat.html',{'chats':chats,'uid':uid})

@@ -9,6 +9,8 @@
 	<script src="{% static "assets/js/ajax2.js" %}"></script>
     <script src="{% static "assets/js/ajax.js" %}"></script>
     <script src="{% static "assets/js/ajax1.js" %}"></script>
+    <script src="{% static "assets/js/chat.js" %}"></script>
+    <script src="{% static "assets/js/chatrefresh.js" %}"></script>
     <script src="{% static "assets/js/jquery-1.10.2.js" %}"></script>
     <script src="{% static "assets/js/jquery-ui.js" %}"></script>
     <!-- Core CSS - Include with every page -->
@@ -152,6 +154,9 @@
 			width:300px;
 			float:right;
 			text-align:left;
+		}
+                .desp2 {
+			float: right;
 		}
 		.desp1 {
 			height:150px;
@@ -473,15 +478,25 @@
 	<div class="md-modal md-effect-7" id="modal-7">
 	<div class="modal1">
 		<div class="modal-dialog">
-			<div class="modal-content">
+			<div class="modal-content" style="height:{{height}}px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
 					<h4 class="modal-title">Add New Task</h4>
 				</div>
-                                <form id="add_task" method="post" action="">
+                                <form id="add_task" method="post" action="" onsubmit="return(add_task_validation(event,this));">
                                     {% csrf_token %}
-                                    {{ add_task.as_p }}
-                                    <input type="submit" name="add_task" value="Add Task" />
+                                    <p><label for="task_name"><strong>Task Name:</strong></label><input type="text" id="task_name" name = "task_name" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><label for="task_description"><strong>Task Description:</strong></label><input type="text" id="task_description" name = "task_description" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><label for="task_deadline"><strong>Task Deadline:</strong></label><input type="text" id="task_deadline" name = "task_deadline" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><strong>Task Members:</strong>
+                                    <div style="text-align: center; ">
+                                    {% for member in project.project_members.all %}
+                                        <input type="checkbox" name="task_members" id="option{{member.id}}" value={{member.username}} />
+                                        <label for="option{{member.id}}" style="margin-bottom: 10px;"><b>{{member.username}}</b></label><br />
+                                    {% endfor %}
+                                    </div>
+                                    </p>
+                                    <input type="submit" name="add_task" value="Add Task" style="position: absolute; bottom: 0; left: 10px;"/>
                                 </form>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
@@ -497,15 +512,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/rango/profile/{{user.pk}}/">Project Leader: {{project.project_leader.username}}</a>
+                <a class="navbar-brand" href="/rango/profile/{{user.pk}}/"><strong>Home</strong></a>
             </div>
             <!-- /.navbar-header -->
+        <!--    -->
             <div class="navbar-header" style="margin-left: 300px; margin-top: 12px; ">
                 <input type="text" id = "search" style="text-align: left; width: 400px; height:30px; padding: 5px;" placeholder="Search here" />
                 <input type="text" id="curr_project" hidden="hidden" value="{{project.pk}}" />
                 <ul id="search-results">
                 </ul>
             </div>
+        <!--    -->
 
             <ul class="nav navbar-top-links navbar-right">
                 <!-- /.dropdown -->
@@ -661,6 +678,7 @@
 										</form>
 										<br />
 										<div class="bin">
+                                                                                Task Description<strong>{{task.task_description}}</strong>
 										<form id="complete_task" method="post" action="">
 											{% csrf_token %}
 											<input type="text" name="curr_task" hidden="hidden" value="{{task.pk}}" />
@@ -678,11 +696,6 @@
 											</li>
                               {% endfor %}
 										</ul>
-										<input type="text" id="add_people" class="addpeop1" placeholder="Enter Name" />
-                                                                                <input type="text" id="curr_task" hidden="hidden" value="{{task.pk}}" />
-<input type="text" id="curr_proj" hidden="hidden" value="{{project.pk}}" />
-                                                                                <ul id="task_members">  
-                                                                                </ul>
 										<h5><strong> Files </strong></h5>
 										<ul>
                               {% for comment in task.task_comment.all %}
@@ -764,26 +777,14 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body" id="discussions">
-                            <ul class="chat">
-                                <li class="left clearfix">
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
-                                        </div>
-                                        <p>
-                                            Hello fellas....
-                                        </p>
-                                        <small class="pull-right text-muted">
-                                            <i class="fa fa-clock-o fa-fw"></i> 18 mins ago
-                                        </small>
-                                    </div>
-                                </li>
-    
-                            </ul>
+                            {% include 'rango/chat.html' %}
                         </div>
                         <!-- /.panel-body -->
                         <div class="addchat">
-                                <input size="20" class="inp1" type="text" onkeypress="chatupdate(this, event);" placeholder="Type your message here..." />
+                                <input size="20" class="inp1" type="text" name="chat_msg" id="chat_msg" placeholder="Type your message here..." />
+                                <input type="text" name="project_id" id="project_id" value="{{project.pk}}" hidden="hidden" />
+                                <input type="text" name="user_username" id="user_username" value="{{user.username}}" hidden="hidden" />
+                                <input type="text" name="user_id" id="user_id" value="{{user.pk}}" hidden="hidden" />
                         </div>
                         <!-- /.panel-footer -->
                     </div>
@@ -863,7 +864,7 @@
                         <!-- /.panel-heading -->
                         
                         <div class="panel-body">
-                    	   	<form id="edit_project_details" method="post" action="">
+                    	   	<form id="edit_project_details" method="post" action="" onsubmit="return(edit_project_validation(event,this));">
 
                             	{% csrf_token %}
 
@@ -882,7 +883,7 @@
                           		<input type="submit" name="submit" value="Save Changes" class="btn btn-primary" />
             
                         	</form>
-							<form id="delete_project" action="" method="post">
+							<form id="delete_project" action="" method="post" >
 								{% csrf_token %}
 								<a href="" onclick="delpro(event);" style="float:right;" >Delete this project</a>
 								<input type="submit" name="delete_project" value="Delete Project" hidden="hidden" id="delete_pro_btn" />
@@ -920,7 +921,7 @@
                     </form>
                     {% endif %}
                     {% else %}
-                        Already Applied
+                        <input type="button" name="apply" style="float:right;" value="Applied" class="btn"/>
                     {% endif %}
                 </div>
                 <!-- /.col-lg-12 -->
@@ -967,7 +968,7 @@
 									<div class="subj">
 										<strong> Description </strong>
 									</div>
-									<div class="desp1">
+									<div class="desp">
 										{{ project.project_description }}
 									</div>
 								</div>
@@ -977,11 +978,11 @@
 									<div class="subj">
 										<strong> Project Members </strong>
 									</div>
-                                                                        {% for member in project.project_members.all %}
+                                                                           {% for member in project.project_members.all %}
 									<div class="desp">
-										{{ member }}
+										<a href="/rango/profile/{{member.id}}/"><li><h4>{{member.first_name}} {{member.last_name}}</h4>
 									</div>
-                                                                        {% endfor %}
+                                                                           {% endfor %}
 								</div>
 								<br />
 						</div>
@@ -1012,18 +1013,16 @@
 
     <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
     <script src="{% static "assets/js/demo/dashboard-demo.js" %}"></script>
-    <script type="text/javascript">
-    	function add_task_validation(event,el)	{
+   <script type="text/javascript">
+    	function edit_project_validation(event,el)	{
     		var name=document.getElementById("id_project_name");
     		var desc=document.getElementById("id_project_description");
     		var dept=document.getElementById("id_project_department");
     		if(name.value=="")	{
-    			name.style.border="2px solid #D00000;";
     			alert("Project Name can't be empty");
     			return false;
     		}
     		else	{
-    			name.style.border="";
     			if(desc.value=="")	{
     				alert("Project Description can't be empty");
     				return false;
@@ -1031,6 +1030,31 @@
     			else	{
     				if(dept.options[0].selected)	{
     					alert("Department not selected");
+    					return false;
+    				}
+    				else	{
+    					return true;
+    				}
+    			}
+    		}
+    	}
+		function add_task_validation(event,el)	{
+			
+    		var name=document.getElementById("task_name");
+    		var desc=document.getElementById("task_description");
+    		var dead=document.getElementById("task_deadline");
+    		if(name.value=="")	{
+    			alert("Task Name can't be empty");
+    			return false;
+    		}
+    		else	{
+    			if(desc.value=="")	{
+    				alert("Task Description can't be empty");
+    				return false;
+    			}
+    			else	{
+    				if(dead.value=="")	{
+    					alert("Task deadline can't be empty");
     					return false;
     				}
     				else	{
@@ -1210,7 +1234,6 @@
 			el.style.visibility="hidden";
 		}
 		function commententer(e) {
-			alert("hello");
 			e=getFirstChildWithTagName(e,"P");
 			e=getFirstChildWithTagName(e,"TEXTAREA");
 			var atr=document.createAttribute("onkeypress");

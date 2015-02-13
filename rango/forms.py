@@ -1,4 +1,4 @@
-from rango.models import UserProfile, Project, Comment, Task
+from rango.models import UserProfile, Project, Comment, Task, Chat
 from django.contrib.auth.models import User
 from django import forms
 from django.db import models
@@ -34,7 +34,11 @@ class TaskForm(forms.ModelForm):
         model = Task
         fields = ('task_name','task_description','task_deadline')
 
-        
+class chatform(forms.ModelForm):
+    class Meta:
+        model = Chat
+        fields = ('chat_message','chat_user')
+    
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

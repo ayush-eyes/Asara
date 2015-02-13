@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="shortcut icon" href="{% static "assets/images/logo.jpg" %}"><title>{{project.project_name}}</title>				<!--Should be updated from database -->
     <script src="{% static "assets/js/jquery-2.0.0.min.js" %}"></script>
+	<script src="{% static "assets/js/ajax2.js" %}"></script>
     <script src="{% static "assets/js/ajax.js" %}"></script>
     <script src="{% static "assets/js/ajax1.js" %}"></script>
+    <script src="{% static "assets/js/chat.js" %}"></script>
+    <script src="{% static "assets/js/chatrefresh.js" %}"></script>
+    <script src="{% static "assets/js/jquery-1.10.2.js" %}"></script>
+    <script src="{% static "assets/js/jquery-ui.js" %}"></script>
+	<script src="{% static "assets/js/jquery-ui-1.10.4.custom.js" 		%}"></script>
+<script src="{% static "assets/js/jquery.timepicker.js" %}"></script>
     <!-- Core CSS - Include with every page -->
     <link href="{% static "assets/css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "assets/font-awesome/css/font-awesome.css" %}" rel="stylesheet">			<!--add task, delete task, add member to task, remove member from task, manager corner, edit project, declare project completed-->
-
+	 <link href="{% static "assets/css/jquery-ui.css" %}" rel="stylesheet">
     <!-- Page-Level Plugin CSS - Dashboard -->
     <link href="{% static "assets/css/plugins/morris/morris-0.4.3.min.css" %}" rel="stylesheet ">
     <link href="{% static "assets/css/plugins/timeline/timeline.css" %}" rel="stylesheet ">
@@ -24,6 +28,7 @@
 	<style type="text/css">
 		input[type="checkbox"] {float:right;}
 		ul {list-style-type:none;}
+		.nav li	{margin-bottom:0px;}
 		.done {
 			float:right;
 			width:20px;
@@ -152,6 +157,9 @@
 			float:right;
 			text-align:left;
 		}
+                .desp2 {
+			float: right;
+		}
 		.desp1 {
 			height:150px;
 			width:300px;
@@ -167,7 +175,7 @@
 		.addtask {
 			width:120px;
 			height:40px;
-			border-radius:2px;
+			border:1px solid #DDD;
 			background-color:#f5f5f5;
 			margin-bottom:10px;
 			margin-left:55px;
@@ -466,20 +474,31 @@
 </head>
 
 <body onload="init()">
-    
+ 
     {% if project %}
         
+	<div class="md-modal md-effect-7" id="modal-7">
 	<div class="modal1">
 		<div class="modal-dialog">
-			<div class="modal-content">
+			<div class="modal-content" style="height: 300px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="reset();">&times;</button>
 					<h4 class="modal-title">Add New Task</h4>
 				</div>
-                                <form id="add_task" method="post" action="">
+                                <form id="add_task" method="post" action="" onsubmit="return(add_task_validation(event,this));">
                                     {% csrf_token %}
-                                    {{ add_task.as_p }}
-                                    <input type="submit" name="add_task" value="Add Task" />
+                                    <p><label for="task_name"><strong>Task Name:</strong></label><input type="text" id="task_name" name = "task_name" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><label for="task_description"><strong>Task Description:</strong></label><input type="text" id="task_description" name = "task_description" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><label for="task_deadline"><strong>Task Deadline:</strong></label><input type="text" id="task_deadline" name = "task_deadline" style="text-align: left; width: 400px; height:30px; padding: 5px; float: right;"/></p>
+                                    <p><strong>Task Members:</strong>
+                                    <div style="float: right;">
+                                    {% for member in project.project_members.all %}
+                                        <input type="checkbox" name="task_members" id="option{{member.id}}" value={{member.username}} />
+                                        <label for="option{{member.id}}" style="margin-bottom: 10px;"><b>{{member.username}}</b></label><br />
+                                    {% endfor %}
+                                    </div>
+                                    </p>
+                                    <input type="submit" name="add_task" value="Add Task" style="position: absolute; bottom: 0; left: 10px;"/>
                                 </form>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
@@ -495,15 +514,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/rango/profile/{{user.pk}}/">{{project.project_leader.username}}</a>
+                <a class="navbar-brand" href="/rango/profile/{{user.pk}}/">Project Leader: {{project.project_leader.username}}</a>
             </div>
             <!-- /.navbar-header -->
+            {% if project.leader %}
             <div class="navbar-header" style="margin-left: 300px; margin-top: 12px; ">
                 <input type="text" id = "search" style="text-align: left; width: 400px; height:30px; padding: 5px;" placeholder="Search here" />
                 <input type="text" id="curr_project" hidden="hidden" value="{{project.pk}}" />
                 <ul id="search-results">
                 </ul>
             </div>
+            {% endif %}
 
             <ul class="nav navbar-top-links navbar-right">
                 <!-- /.dropdown -->
@@ -651,13 +672,20 @@
 										</div>
 									</a>
 									<div id="comment" class="el">
-										<form>
+										<form id="complete_task" method="post" action="">
+											{% csrf_token %}
 											<strong> Have you completed this task? </strong>
-											<input type="submit" name="done" value="Yes" onclick="check(this);" class="complt" />
+											<input type="text" name="curr_task" hidden="hidden" value="{{task.pk}}" />
+											<input type="submit" name="complete_task" value="Yes" onclick="check(this);" class="complt" />
 										</form>
 										<br />
-										<div class="bin" onclick="deletetask(this);">
-											<input type="submit" class="bin1" value="" title="Click this button to delete the task" />
+										<div class="bin">
+                                                                                Task Description<strong>{{task.task_description}}</strong>
+										<form id="complete_task" method="post" action="">
+											{% csrf_token %}
+											<input type="text" name="curr_task" hidden="hidden" value="{{task.pk}}" />
+											<input type="submit" name="delete_task" class="bin1" onclick="deletetask(this,event);" value="" title="Click this button to delete the task" />
+										</form>
 										</div>
 										<div class="">
 											<h5><strong>Deadline</strong> : {{ task.task_deadline }} </h5>
@@ -670,10 +698,6 @@
 											</li>
                               {% endfor %}
 										</ul>
-										<input type="text" id="add_people" class="addpeop1" placeholder="Enter Name" />
-                                                                                <input type="text" id="curr_task" hidden="hidden" value="{{task.pk}}" />
-                                                                                <ul id="people-search-results">  
-                                                                                </ul>
 										<h5><strong> Files </strong></h5>
 										<ul>
                               {% for comment in task.task_comment.all %}
@@ -755,26 +779,14 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body" id="discussions">
-                            <ul class="chat">
-                                <li class="left clearfix">
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Anwesh Sinha Ray</strong> 
-                                        </div>
-                                        <p>
-                                            Hello fellas....
-                                        </p>
-                                        <small class="pull-right text-muted">
-                                            <i class="fa fa-clock-o fa-fw"></i> 18 mins ago
-                                        </small>
-                                    </div>
-                                </li>
-    
-                            </ul>
+                            {% include 'rango/chat.html' %}
                         </div>
                         <!-- /.panel-body -->
                         <div class="addchat">
-                                <input size="20" class="inp1" type="text" onkeypress="chatupdate(this, event);" placeholder="Type your message here..." />
+                                <input size="20" class="inp1" type="text" name="chat_msg" id="chat_msg" placeholder="Type your message here..." />
+                                <input type="text" name="project_id" id="project_id" value="{{project.pk}}" hidden="hidden" />
+                                <input type="text" name="user_username" id="user_username" value="{{user.username}}" hidden="hidden" />
+                                <input type="text" name="user_id" id="user_id" value="{{user.pk}}" hidden="hidden" />
                         </div>
                         <!-- /.panel-footer -->
                     </div>
@@ -854,7 +866,7 @@
                         <!-- /.panel-heading -->
                         
                         <div class="panel-body">
-                    	   	<form id="edit_project_details" method="post" action="">
+                    	   	<form id="edit_project_details" method="post" action="" onsubmit="return(edit_project_validation(event,this));">
 
                             	{% csrf_token %}
 
@@ -870,15 +882,14 @@
                               	<label for="id_project_description"> Project Description : </label>
                               	{{ form.project_description }}
                               </p>
-                              <p>
-                              	<label for="id_project_members">	Project Members : </label>
-                              	{{ form.project_members }}
-                              </p>
                           		<input type="submit" name="submit" value="Save Changes" class="btn btn-primary" />
             
                         	</form>
-								
-								
+							<form id="delete_project" action="" method="post" >
+								{% csrf_token %}
+								<a href="" onclick="delpro(event);" style="float:right;" >Delete this project</a>
+								<input type="submit" name="delete_project" value="Delete Project" hidden="hidden" id="delete_pro_btn" />
+							</form>
                             </div>
                         
                         <!-- /.panel-body -->
@@ -912,7 +923,7 @@
                     </form>
                     {% endif %}
                     {% else %}
-                        Already Applied
+                        <input type="button" name="apply" style="float:right;" value="Applied" class="btn"/>
                     {% endif %}
                 </div>
                 <!-- /.col-lg-12 -->
@@ -954,22 +965,28 @@
 									</div>
 								</div>
 								<br />
-<!--								<div class="about-part">
-									<div class="subj">
-										<strong> Members </strong>
-									</div>
-									<div class="desp1">
-										{{ project.project_members }}
-									</div>
-								</div>-->
+
 								<div class="about-part">
 									<div class="subj">
 										<strong> Description </strong>
 									</div>
-									<div class="desp1">
+									<div class="desp">
 										{{ project.project_description }}
 									</div>
 								</div>
+                                                                
+                                                                <br />
+								<div class="about-part">
+									<div class="subj">
+										<strong> Project Members </strong>
+									</div>
+                                                                           {% for member in project.project_members.all %}
+									<div class="desp">
+										<a href="/rango/profile/{{member.id}}/"><li><h4>{{member.first_name}} {{member.last_name}}</h4>
+									</div>
+                                                                           {% endfor %}
+								</div>
+								<br />
 						</div>
                         <!-- /.panel-body -->
                     </div>
@@ -998,6 +1015,90 @@
 
     <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
     <script src="{% static "assets/js/demo/dashboard-demo.js" %}"></script>
+    <script type="text/javascript">
+    	function add_task_validation(event,el)	{
+    		var name=document.getElementById("id_project_name");
+    		var desc=document.getElementById("id_project_description");
+    		var dept=document.getElementById("id_project_department");
+    		if(name.value=="")	{
+    			name.style.border="2px solid #D00000;";
+    			alert("Project Name can't be empty");
+    			return false;
+    		}
+    		else	{
+    			name.style.border="";
+    			if(desc.value=="")	{
+    				alert("Project Description can't be empty");
+    				return false;
+    			}
+    			else	{
+    				if(dept.options[0].selected)	{
+    					alert("Department not selected");
+    					return false;
+    				}
+    				else	{
+    					return true;
+    				}
+    			}
+    		}
+    	}
+    </script>
+   <script type="text/javascript">
+    	function edit_project_validation(event,el)	{
+    		var name=document.getElementById("id_project_name");
+    		var desc=document.getElementById("id_project_description");
+    		var dept=document.getElementById("id_project_department");
+    		if(name.value=="")	{
+    			alert("Project Name can't be empty");
+    			return false;
+    		}
+    		else	{
+    			if(desc.value=="")	{
+    				alert("Project Description can't be empty");
+    				return false;
+    			}
+    			else	{
+    				if(dept.options[0].selected)	{
+    					alert("Department not selected");
+    					return false;
+    				}
+    				else	{
+    					return true;
+    				}
+    			}
+    		}
+    	}
+		function add_task_validation(event,el)	{
+			
+    		var name=document.getElementById("id_task_name");
+    		var desc=document.getElementById("id_task_description");
+    		var dead=document.getElementById("id_task_deadline");
+    		if(name.value=="")	{
+    			alert("Task Name can't be empty");
+    			return false;
+    		}
+    		else	{
+    			if(desc.value=="")	{
+    				alert("Task Description can't be empty");
+    				return false;
+    			}
+    			else	{
+    				if(dead.value=="")	{
+    					alert("Task deadline can't be empty");
+    					return false;
+    				}
+    				else	{
+    					return true;
+    				}
+    			}
+    		}
+    	}
+    </script>
+<script>
+  $(function() {
+    $("#task_deadline").datepicker();
+  });
+  </script>
 	<script type="text/javascript">
 		function expand(el)	{
 			var list = document.getElementsByClassName("el");
@@ -1105,13 +1206,13 @@
 		function scrollbar(el) {
 			el.scrollTop = el.scrollHeight;
 		}
-		function deletetask(el) {
+		function deletetask(el, event) {
 			var r=window.confirm("Are you sure you want to delete this task?");
 			if(r==true) {
 				el=el.parentNode;
-				el=el.parentNode;
-				var top=el.parentNode;
-				top.removeChild(el);
+				el=el.submit();
+			} else {
+				event.preventDefault();
 			}
 		}
 		function addtask(el) {
@@ -1168,7 +1269,6 @@
 			el.style.visibility="hidden";
 		}
 		function commententer(e) {
-			alert("hello");
 			e=getFirstChildWithTagName(e,"P");
 			e=getFirstChildWithTagName(e,"TEXTAREA");
 			var atr=document.createAttribute("onkeypress");
@@ -1194,11 +1294,20 @@
                         el.submit();
                     }
                 }
+      function delpro(event) {
+			event.preventDefault();
+			var r=window.confirm("Are you sure you want to delete this project?");
+			if(r==true)	{
+				var btn=document.getElementById("delete_pro_btn");
+				btn.click();
+			}
+		}
 	</script>
         {% else %}
             <strong>The specified Project does not exist!</strong>
         {% endif %}
 </body>
+
 
 
 </html>

@@ -9,4 +9,6 @@ urlpatterns = patterns('',
     url(r'^search/$',views.search_titles),
     url(r'^user_search/$',views.search_profiles),
     url(r'^task_add_people/$',views.add_member),
+    url(r'^chat/$',views.chatsend),
+    url(r'^chatrefresh/$',views.chatrefresh),
     )
